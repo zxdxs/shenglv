@@ -239,6 +239,7 @@
       cols.appendChild(d);
     }
     col('本站', [{ text: '《聲律發蒙》全本 ' + (M.rhymeCount || 0) + ' 韻·粵語導讀與反切對帳' },
+                 { text: '維護者　課孫翁' },
                  { text: 'v' + (M.version || '1.0.0'), cls: 'muted' }]);
     col('文本來源', [{ text: M.source || '' }, { text: '正文屬公有領域', cls: 'muted' }]);
     col('粵拼與語音', [{ text: M.jyutpingSource || '' },
