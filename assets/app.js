@@ -193,6 +193,7 @@
     { href: 'weihe.html', label: '為什麼用粵語' },
     { href: 'quanben.html', label: '全本 106 韻' },
     { href: 'duizhang.html', label: '反切對帳' },
+    { href: 'contribute.html', label: '提供錄音' },
     { href: 'about.html', label: '關於與授權' }
   ];
 
