@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>反切對帳 —— 聲律發蒙·粵語</title>
+<meta name="description" content="將《聲律發蒙》第五卷的本韻字譜反切，與 rime-cantonese 粵拼逐條對帳：聲母、韻母、四聲類別逐項核對，不吻合者即待查清單。">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="duizhang.html">
+
+<header class="site" id="nav"></header>
+
+<main class="wrap">
+
+  <h1>反切對帳</h1>
+  <p class="lead">
+    反切上字取聲母、下字取韻母與聲調。用這條規則去推，就能得到一個獨立於粵拼字典的期望值——
+    再與字典的實際讀音逐字核對。
+  </p>
+
+  <div class="stats" id="dzStats"></div>
+
+  <div class="note">
+    <p>
+      <b>為什麼只敢說「四聲類別吻合」而不說「完全吻合」？</b>
+      因為中古到粵語的演變有多條規則尚未建模：全濁聲母清化（澄母「直弓切」的蟲今讀 cung 而非 zung）、
+      云母演變（羽弓切「雄」今讀 hung 而非 jung）、韻攝分化（遇俱切「禺」今讀 eoi 而非 yu）等。
+    </p>
+    <p>
+      因此表中的「✗」不是錯誤，而是<b>待查清單</b>：它標出了哪些字需要進一步判斷，
+      以及中古音對應規則還缺哪一塊。本站採用嚴格的「聲母集合 × 韻母集合」匹配，
+      因為反切上下字本身也可能是多音字。
+    </p>
+  </div>
+
+  <h2>逐條核對</h2>
+  <div class="filters" id="dzFilters"></div>
+  <div id="dzBody"></div>
+
+</main>
+
+<footer class="site" id="foot"></footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

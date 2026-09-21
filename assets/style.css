@@ -1,0 +1,219 @@
+/* 聲律發蒙·粵語 —— 樣式
+   紙墨基調，一切為「讀出聲」服務：字要夠大，行要對齊，韻腳要看得見。 */
+
+:root {
+  --ink: #1c1a17;
+  --ink-soft: #45403a;
+  --paper: #fbf8f2;
+  --paper-2: #f3eee4;
+  --line: #e0d8c9;
+  --accent: #9c2b1f;      /* 韻腳：硃紅 */
+  --jyut: #1f5d7a;        /* 粵拼 */
+  --pin: #8b8378;         /* 拼音 */
+  --ru: #7a4a12;          /* 入聲 */
+  --ok: #2f6b3a;
+  --no: #a8462c;
+  --max: 68rem;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC",
+               "PingFang SC", "Hiragino Sans GB", Georgia, serif;
+  line-height: 1.75;
+  font-size: 16px;
+}
+
+a { color: var(--jyut); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 1.1rem; }
+
+/* ---------- 頁首與導覽 ---------- */
+header.site {
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  position: sticky; top: 0; z-index: 20;
+}
+header.site .wrap {
+  display: flex; align-items: baseline; gap: 1.1rem;
+  padding-top: .8rem; padding-bottom: .7rem; flex-wrap: wrap;
+}
+.brand { font-size: 1.15rem; font-weight: 700; letter-spacing: .06em; color: var(--ink); }
+.brand small { display: block; font-size: .68rem; font-weight: 400;
+  letter-spacing: .16em; color: var(--pin); margin-top: .1rem; }
+nav.main { margin-left: auto; display: flex; gap: .1rem; flex-wrap: wrap; }
+nav.main a {
+  padding: .3rem .7rem; border-radius: 3px; color: var(--ink-soft);
+  font-size: .92rem; letter-spacing: .04em;
+}
+nav.main a:hover { background: var(--paper-2); text-decoration: none; }
+nav.main a[aria-current="page"] { background: var(--ink); color: var(--paper); }
+
+/* ---------- 通用 ---------- */
+main { padding: 2rem 0 3.5rem; }
+
+h1 { font-size: 1.7rem; letter-spacing: .06em; margin: .2rem 0 .4rem; }
+h2 { font-size: 1.22rem; letter-spacing: .05em; margin: 2.2rem 0 .7rem;
+     padding-bottom: .35rem; border-bottom: 1px solid var(--line); }
+h3 { font-size: 1.02rem; letter-spacing: .05em; margin: 1.5rem 0 .5rem; color: var(--ink-soft); }
+p { margin: .6rem 0; }
+.lead { font-size: 1.05rem; color: var(--ink-soft); }
+.muted { color: var(--pin); font-size: .88rem; }
+.center { text-align: center; }
+
+.card {
+  border: 1px solid var(--line); border-radius: 4px;
+  background: var(--paper); padding: 1rem 1.1rem; margin: .9rem 0;
+}
+.card.accent { border-left: 3px solid var(--accent); }
+
+.grid { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.grid.tight { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
+
+a.card-link { display: block; color: inherit; }
+a.card-link:hover { text-decoration: none; border-color: var(--ink-soft); }
+a.card-link .t { font-weight: 700; letter-spacing: .05em; }
+a.card-link .d { font-size: .88rem; color: var(--pin); margin-top: .25rem; }
+
+/* ---------- 數據 ---------- */
+.stats { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); }
+.stat { border: 1px solid var(--line); border-radius: 4px; padding: .7rem .8rem; background: var(--paper-2); }
+.stat .n { font-size: 1.5rem; font-weight: 700; letter-spacing: .02em; color: var(--accent); }
+.stat .n small { font-size: .8rem; font-weight: 400; color: var(--ink-soft); }
+.stat .l { font-size: .8rem; color: var(--pin); margin-top: .1rem; }
+
+/* ---------- 對句排版（四行對齊）---------- */
+.stanza { border: 1px solid var(--line); border-radius: 4px; padding: 1rem 1.1rem; margin: 1rem 0; background: var(--paper); }
+.stanza > .st-title { font-size: .82rem; letter-spacing: .2em; color: var(--pin); margin-bottom: .5rem; }
+
+.line { display: flex; flex-wrap: wrap; gap: 0 .1rem; margin: .35rem 0; }
+.line + .line { margin-top: .1rem; }
+
+.ch { display: flex; flex-direction: column; align-items: center; width: 2.7rem; }
+.ch > span { display: block; text-align: center; white-space: nowrap; }
+
+.ch .r { font-size: .7rem; color: var(--jyut); font-family: "Menlo", "Consolas", monospace;
+         letter-spacing: 0; height: 1.05rem; line-height: 1.05rem; }
+.ch .p { font-size: .66rem; color: var(--pin); height: .9rem; line-height: .9rem; }
+.ch .c { font-size: 1.42rem; line-height: 1.65; height: 2.4rem; }
+.ch .s { font-size: .72rem; color: var(--pin); height: 1rem; line-height: 1rem; }
+
+.ch.ru .r { color: var(--ru); font-weight: 700; border-bottom: 1.5px solid var(--ru); }
+.ch.end .c { color: var(--accent); font-weight: 700; }
+.ch.multi .r::after { content: "?"; color: var(--pin); font-size: .6rem; vertical-align: super; }
+.ch.punc { width: 1.3rem; }
+.ch.punc .c { font-size: 1.42rem; }
+
+.legend { display: flex; flex-wrap: wrap; gap: .2rem 1rem; font-size: .8rem; color: var(--pin); margin: .5rem 0 1rem; }
+.legend b { font-weight: 700; }
+
+/* ---------- 韻部選擇 ---------- */
+.rhyme-nav { display: flex; flex-wrap: wrap; gap: .3rem; margin: .8rem 0 1.2rem; }
+.rhyme-nav button {
+  font: inherit; font-size: .88rem; padding: .3rem .6rem; cursor: pointer;
+  background: var(--paper); color: var(--ink-soft);
+  border: 1px solid var(--line); border-radius: 3px; letter-spacing: .04em;
+}
+.rhyme-nav button:hover { border-color: var(--ink-soft); }
+.rhyme-nav button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* ---------- 字譜 ---------- */
+.zupu { font-size: 1rem; }
+.zupu .row { padding: .3rem 0; border-bottom: 1px dotted var(--line); display: flex; gap: .6rem; align-items: baseline; flex-wrap: wrap; }
+.zupu .qie { flex: 0 0 5.4rem; color: var(--pin); font-size: .86rem; letter-spacing: .04em; }
+.zupu .cs { display: flex; flex-wrap: wrap; gap: .15rem .5rem; }
+.zupu .zc { display: inline-flex; align-items: baseline; gap: .18rem; }
+.zupu .zc .c { font-size: 1.2rem; }
+.zupu .zc .r { font-size: .72rem; color: var(--jyut); font-family: "Menlo", "Consolas", monospace; }
+.zupu .zc.ru .c { color: var(--ru); font-weight: 700; }
+.zupu .zc.ru .r { border-bottom: 1px solid var(--ru); }
+.zupu .zc.multi .r::after { content: "?"; color: var(--pin); font-size: .6rem; vertical-align: super; }
+
+/* ---------- 表格 ---------- */
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 4px; }
+table { border-collapse: collapse; width: 100%; font-size: .86rem; }
+th, td { padding: .38rem .55rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+th { background: var(--paper-2); font-weight: 700; letter-spacing: .04em; white-space: nowrap; position: sticky; top: 0; }
+tbody tr:hover { background: var(--paper-2); }
+td.r { font-family: "Menlo", "Consolas", monospace; color: var(--jyut); white-space: nowrap; }
+.ok { color: var(--ok); font-weight: 700; }
+.no { color: var(--no); font-weight: 700; }
+.chip { display: inline-block; font-size: .74rem; padding: .05rem .4rem; border-radius: 2px;
+        border: 1px solid var(--line); color: var(--pin); margin-right: .25rem; }
+.chip.ru { color: var(--ru); border-color: var(--ru); }
+
+.filters { display: flex; gap: .9rem; flex-wrap: wrap; align-items: center; margin: .8rem 0; font-size: .88rem; color: var(--ink-soft); }
+.filters label { display: inline-flex; gap: .35rem; align-items: center; cursor: pointer; }
+
+/* ---------- 頁尾 ---------- */
+footer.site { border-top: 1px solid var(--line); background: var(--paper-2); padding: 1.4rem 0 2rem; font-size: .84rem; color: var(--pin); }
+footer.site .cols { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+footer.site b { color: var(--ink-soft); font-weight: 700; }
+footer.site a { color: var(--ink-soft); }
+
+.note { border-left: 3px solid var(--line); padding-left: .8rem; color: var(--ink-soft); font-size: .9rem; }
+
+/* ---------- 音頻控制 ---------- */
+.pbtn {
+  font: inherit; font-size: .7rem; line-height: 1; cursor: pointer;
+  min-width: 1.5rem; height: 1.5rem; padding: 0; margin: .5rem .35rem 0 0;
+  background: var(--paper-2); color: var(--jyut);
+  border: 1px solid var(--line); border-radius: 50%; flex: 0 0 auto;
+}
+.pbtn:hover { border-color: var(--jyut); background: #eef4f8; }
+.line { align-items: flex-start; }
+.line.playing { background: #fdf6e6; border-radius: 3px; }
+.line.playing .pbtn { background: var(--jyut); color: #fff; border-color: var(--jyut); }
+
+.st-head { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; margin-bottom: .35rem; }
+.st-head .st-title { font-size: .82rem; letter-spacing: .2em; color: var(--pin); }
+.st-count { font-size: .74rem; color: var(--pin); }
+.cbtn {
+  font: inherit; font-size: .78rem; cursor: pointer; padding: .15rem .55rem;
+  background: var(--paper); color: var(--jyut);
+  border: 1px solid var(--line); border-radius: 3px;
+}
+.cbtn:hover { border-color: var(--jyut); background: #eef4f8; }
+
+/* ---------- 卷／韻選擇 ---------- */
+.vol-tabs { display: flex; flex-wrap: wrap; gap: .3rem; margin: 1.1rem 0 .2rem; }
+.vol-tabs button {
+  font: inherit; font-size: .92rem; padding: .35rem .8rem; cursor: pointer;
+  background: var(--paper-2); color: var(--ink-soft);
+  border: 1px solid var(--line); border-radius: 3px; letter-spacing: .05em;
+}
+.vol-tabs button:hover { border-color: var(--ink-soft); }
+.vol-tabs button[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+.rhyme-nav.hidden { display: none; }
+
+/* ---------- 待考字 ---------- */
+.ch.pending .r { color: var(--pin); font-size: .58rem; border-bottom: 1px dotted var(--pin); }
+.ch.pending .c { color: var(--ink-soft); }
+.zupu .zc.pending .r { color: var(--pin); font-size: .64rem; border-bottom: 1px dotted var(--pin); }
+.zupu .zc.pending .c { color: var(--ink-soft); }
+
+/* ---------- 詩例與音頻 ---------- */
+.poem {
+  font-size: 1.12rem; line-height: 2.15; letter-spacing: .1em;
+  margin: .3rem 0 .8rem; color: var(--ink);
+}
+audio {
+  display: block; width: 100%; max-width: 30rem; height: 2.2rem;
+  margin: .5rem 0 .3rem;
+}
+
+@media (max-width: 34rem) {
+  .ch { width: 2.65rem; }
+  .ch .c { font-size: 1.24rem; height: 2.1rem; }
+  .ch .r { font-size: .68rem; }
+  .ch .p { font-size: .64rem; }
+  h1 { font-size: 1.4rem; }
+  .pbtn { min-width: 1.3rem; height: 1.3rem; margin-right: .2rem; }
+}

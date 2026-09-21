@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>關於與授權 —— 聲律發蒙·粵語</title>
+<meta name="description" content="本站的文本來源、粵拼與語音授權、選音方法、外掛字音表與已知限制。正文屬公有領域；粵拼來自 rime-cantonese（CC-BY-4.0 / ODbL）；語音為雲端神經 TTS 合成。">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="about.html">
+
+<header class="site" id="nav"></header>
+
+<main class="wrap">
+
+  <h1>關於與授權</h1>
+
+  <h2>一　文本來源</h2>
+  <div class="card">
+    <p><b>《聲律發蒙》</b>元·祝明撰，明萬曆刊本。正文屬<b>公有領域</b>，可自由使用。</p>
+    <p class="muted">本站所據之校勘、箋注、誦讀本與輔導本，為編者自製成果。全本五卷
+      一百零六韻，與平水韻韻部相合。</p>
+  </div>
+
+  <h2>二　粵拼資料與授權</h2>
+  <div class="card">
+    <p>
+      逐字粵拼取自 <a href="https://github.com/rime/rime-cantonese" rel="noopener">rime-cantonese</a>
+      之 <code>jyut6ping3.chars.dict.yaml</code>，授權為 <b>CC-BY-4.0 ＋ ODbL</b>。
+    </p>
+    <ul>
+      <li><b>CC-BY-4.0</b>：標註來源即可使用。</li>
+      <li><b>ODbL</b>：若將衍生之<b>資料庫</b>公開發布（例如提供粵拼資料集下載），
+        該資料庫須以 ODbL 釋出。本站僅將之<b>作為網站內容呈現</b>（Produced Work），
+        未提供資料集下載，亦未隨交付包散布該字典檔。</li>
+    </ul>
+    <p class="muted">
+      該字典以「無權重者為主要讀音、有權重者為次要讀音」排序。
+      這點必須遵守——例如「糾」檔中先出現 <code>dau2 3%</code>、後出現無權重的
+      <code>gau2</code>，正確主讀音是 gau2。若按檔案出現順序取第一個，會取錯。
+    </p>
+  </div>
+
+  <h2>三　語音與授權</h2>
+  <div class="card">
+    <p>
+      全站粵語朗讀由 <b>Microsoft Edge 朗讀服務</b>之粵語神經語音合成
+      （<code>zh-HK-WanLungNeural</code>；另有 <code>zh-HK-HiuMaanNeural</code>、
+      <code>zh-HK-HiuGaaiNeural</code>），於建站時<b>一次性批次下載</b>，
+      隨站封裝，瀏覽時不即時呼叫外部服務、不需連網。
+    </p>
+    <p>
+      <b>授權提醒：</b>Edge 朗讀服務為公開端點，並非正式的商用授權管道。
+      本站目前作為非商業的語言學習工具使用。若日後要商業化，
+      應改用 <b>Azure 語音服務</b>（同一系列神經語音，具正式授權）重新合成——
+      本專案的批次腳本 <code>tools/tts_batch.py</code> 可直接換用其他提供者，
+      音檔路徑與清單不需更動。
+    </p>
+    <p class="muted">
+      朗讀為機器合成，可作讀音示範，但不等同人聲吟誦的藝術處理
+      （平長仄短、入聲急收的節奏感，機器只能近似）。
+    </p>
+  </div>
+
+  <h2>四　方法</h2>
+  <div class="card">
+    <p><b>四行對齊。</b>粵拼在上、普通話拼音次之（僅作對照）、原文居中、吟誦符號在下。</p>
+    <p><b>入聲標示。</b>粵語以 -p／-t／-k 收尾者為入聲，褐色加底線。</p>
+    <p><b>韻腳標紅。</b>凡押韻之字皆為韻腳，含出句與對句之末字。</p>
+    <p><b>選音依據。</b>多音字優先依該字所屬反切定音（依序比：聲母＋韻母 → 韻母 →
+      四聲類別）；無反切可依者取字典主要讀音，並於介面標示「?」，游標停留可見全部讀音。</p>
+    <p><b>反切對帳。</b>以反切推得的期望讀音與實際讀音逐條核對。<b>上下字本身多音時，
+      按「聲母集合 × 韻母集合」匹配</b>，不取單一讀音。不吻合者全部列出，不隱藏。</p>
+  </div>
+
+  <h2>五　規模與覆蓋</h2>
+  <div class="stats" id="aboutStats"></div>
+
+  <h2>六　待考字（不自造讀音）</h2>
+  <div class="card">
+    <p>
+      有一類字，字典未收、且多屬 Unicode 擴展 B 區的罕用字，現代粵音無從查考。
+      本站對這類字的處理是<b>標為「待考」並保留其反切</b>，<b>絕不代填一個看似合理的讀音</b>。
+    </p>
+    <p>
+      其中一個特別的例子是第四卷三絳韻的韻腳 <b>𥞜</b>（U+2579C）：
+      全書字譜未收、無反切可依，本機漢典資料庫亦無此字。原書音注作 jiàng，屬三絳（去聲絳韻）。
+      因無可靠來源，本站標為待考。
+    </p>
+    <p class="muted">
+      另有二十餘字是<b>語料中混入的簡體字形</b>（如「对、来、盖、纠」），
+      經還原為繁體（對、來、蓋、糾）後取得讀音。這屬於原文本的資料品質問題，
+      已記錄並應回報校勘。
+    </p>
+  </div>
+
+  <h2>七　外掛字音表</h2>
+  <div class="card">
+    <p>rime-cantonese 未收之字，逐字附依據：</p>
+    <div id="variants"></div>
+    <ul class="muted">
+      <li><b>簡體混入字</b>（伣卺娱对弃彦悮敩来椮横瘗盖穞纠绍缈荆蹰魉亵药凛剥）：
+        還原為繁體後取讀音，如 對 deoi3、來 loi4、蓋 goi3、糾 gau2、橫 waang4。</li>
+      <li><b>猎</b> → zik6：本卷十藥字譜作「秦昔切：猎（獸名似熊）」，
+        <b>係獨立字而非「獵」之簡體</b>；從母昔韻全濁，陽入清化為不送氣 z。</li>
+      <li><b>齾</b> → ngaat6：本卷八黠字譜作「五鎋切：齾（器缺）」，疑母鎋韻，陽入。</li>
+      <li><b>𥞜</b> → 待考（見上節）。</li>
+    </ul>
+  </div>
+
+  <h2>八　已知限制</h2>
+  <div class="card">
+    <ul>
+      <li><b>多音字約三成七。</b>選音依反切，但反切未必覆蓋全部用例，仍有誤判可能。</li>
+      <li><b>反切對帳未達全吻合。</b>中古到粵語的聲母演變規則尚未完全建模
+        （全濁清化、云母演變、韻攝分化等），不吻合處即待查清單。</li>
+      <li><b>字譜罕用字待考。</b>見第六節；這些字不參與對帳統計。</li>
+      <li><b>語料混入簡體字。</b>原文本應為繁體，實測發現二十餘處，已另行標注。</li>
+      <li><b>音頻為機器合成。</b>節奏與吟誦處理不等同人聲。</li>
+      <li><b>非校勘定本。</b>本站為導讀與工具，不宣稱版本權威性。</li>
+    </ul>
+  </div>
+
+  <h2>九　回報</h2>
+  <div class="card">
+    <p>讀音有誤、反切判讀有疑義、或發現更多混入的簡體字形，都歡迎指出——
+      這一頁的「待查清單」與「待考字」本來就是開放的工作清單。</p>
+  </div>
+
+</main>
+
+<footer class="site" id="foot"></footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/chars.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
