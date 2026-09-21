@@ -11,6 +11,18 @@
   var M = D.meta || {};
   var CH = window.SHENGLV_CHARS || {};
 
+  /* ------------------------------------------------------------- 備案資訊
+     ICP 備案號：取得後填在這裡（例：'蜀ICP备2026055920号-2'）。
+     留空 ⇒ 整段不輸出，頁面外觀完全不變 ⇒ 備案下來前後只改這一行。
+
+     為什麼放在 app.js 而不放 data.js：data.js 是 build_shenglv.py 全量產生的
+     （首行就寫「自動產生，勿手改」），手改會被下次建置覆蓋；app.js 才是手寫維護層。
+
+     工信部要求備案號必須顯示在網站底部，並連結 https://beian.miit.gov.cn/ ——
+     這是法律責任，不是裝飾。 */
+  var BEIAN = '';
+  var BEIAN_URL = 'https://beian.miit.gov.cn/';
+
   /* ------------------------------------------------------------- 小工具 */
   function el(tag, cls, text) {
     var n = document.createElement(tag);
@@ -248,6 +260,18 @@
     col('相關', [{ text: '解決問題訓練站 →', href: 'https://solve-lab.cn/' },
                  { text: '同為「以訓練取代閱讀」的嘗試', cls: 'muted' }]);
     c.appendChild(cols);
+    /* ICP 備案號：BEIAN 留空時整段不輸出（見檔頭「備案資訊」說明） */
+    if (BEIAN) {
+      var b = el('div', 'muted');
+      b.style.marginTop = '12px';
+      b.appendChild(document.createTextNode('ICP 備案：'));
+      var ba = el('a', null, BEIAN);
+      ba.href = BEIAN_URL;
+      ba.target = '_blank';
+      ba.rel = 'noopener';
+      b.appendChild(ba);
+      c.appendChild(b);
+    }
     host.appendChild(c);
   }
 
