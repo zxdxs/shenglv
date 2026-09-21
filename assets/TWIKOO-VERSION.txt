@@ -1,0 +1,27 @@
+twikoo 前端產物版本記錄（自架，非 CDN）
+================================================================
+檔案        assets/twikoo.min.js
+版本        2.0.5（npm dist-tag: latest，2026-09-21 查）
+來源        https://registry.npmmirror.com/twikoo/2.0.5/files/dist/twikoo.min.js
+sha256      48eccb1cddb0ffd6bb5c852078db1a15894f5033f3403975327712733c602910
+sha384      4Qd++vDo/E9KWgAcIJtkQMbXIyxHzfnlhxyHOJk30+mR69rUhzbM6OSM19NIZPXK
+大小        347,989 B
+
+供應鏈核對（2026-09-21）
+  已與 npm 官方 tarball registry.npmjs.org/twikoo/-/twikoo-2.0.5.tgz 內的
+  package/dist/twikoo.min.js 逐位元比對：sha256 相同 ⇒ 產物與官方一致。
+
+為什麼自架而不用 CDN
+  1. 本站面向大陸訪客；jsDelivr 等公共 CDN 在大陸不穩（沙箱實測直接不可達）。
+  2. 留言框是站點的核心互動，不應因第三方 CDN 故障而整片消失。
+  3. 自架可鎖版本，避免上游非兼容更新（ES2022 基線）突然打斷留言功能。
+
+為什麼選 twikoo.min.js 而非 twikoo.all.min.js
+  all 版內含騰訊雲開發（tcb）通道；本站後端是 EdgeOne Makers，用不到。
+  非 tcb 版體積只有一半（348 KB vs 806 KB）。
+
+升級步驟
+  1. 取下一個版本的 dist/twikoo.min.js
+  2. 與 npm 官方 tarball 比對 sha256
+  3. 更新本檔的版本／雜湊／大小
+  4. 跑 tools/live_check.py 與 precheck.py
