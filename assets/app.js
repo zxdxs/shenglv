@@ -573,6 +573,53 @@
     }
   }
 
+  /* --------------------------------------------- 粵拼入門：單音點讀
+     凡標了 data-r（粵拼讀音）的元素都可點，播放 audio/jyutping/<讀音>.mp3。
+     音檔以「讀音」為檔名 ⇒ 同音的例字共用同一個檔，不重複合成，也不會各唸各的。
+     播放器刻意與全本的 AU 分開，兩者不會互相打斷。 */
+  var AU_JP = null, JP_NOW = null;
+
+  function stopJp() {
+    if (JP_NOW) JP_NOW.classList.remove('playing');
+    JP_NOW = null;
+  }
+
+  function playJp(node) {
+    var r = node.getAttribute('data-r');
+    if (!r) return;
+    if (!AU_JP) {
+      AU_JP = document.createElement('audio');
+      AU_JP.preload = 'none';
+      AU_JP.addEventListener('ended', stopJp);
+      AU_JP.addEventListener('error', stopJp);
+    }
+    if (JP_NOW && JP_NOW !== node) JP_NOW.classList.remove('playing');
+    JP_NOW = node;
+    node.classList.add('playing');
+    AU_JP.src = 'audio/jyutping/' + r + '.mp3';
+    try {
+      var p = AU_JP.play();
+      if (p && p.catch) p.catch(function () { stopJp(); });
+    } catch (e) { stopJp(); }
+  }
+
+  function renderJyutping() {
+    var nodes = document.querySelectorAll('[data-r]');
+    if (!nodes.length) return;          /* 不在這一頁就什麼都不做 */
+    var seen = {};
+    Array.prototype.forEach.call(nodes, function (n) {
+      seen[n.getAttribute('data-r')] = 1;
+      n.setAttribute('title', '點一下聽發音');
+      n.addEventListener('click', function () { playJp(n); });
+    });
+    /* 頁首的自述數字由實際標記數算出來，不寫死（改頁面時不會對不上） */
+    var c = document.querySelectorAll('[data-jpcount]');
+    var nSyl = Object.keys(seen).length;
+    Array.prototype.forEach.call(c, function (el2) {
+      el2.textContent = nodes.length + ' 處（' + nSyl + ' 個不同音節）';
+    });
+  }
+
   /* -------------------------------------------------------------- 啟動 */
   document.addEventListener('DOMContentLoaded', function () {
     buildNav();
@@ -583,5 +630,6 @@
     else if (page === 'quanben') renderQuanben();
     else if (page === 'duizhang') renderDuizhang();
     else if (page === 'about') renderAbout();
+    else if (page === 'jyutping') renderJyutping();
   });
 })();

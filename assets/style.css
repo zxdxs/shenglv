@@ -217,3 +217,12 @@ audio {
   h1 { font-size: 1.4rem; }
   .pbtn { min-width: 1.3rem; height: 1.3rem; margin-right: .2rem; }
 }
+
+/* ---------------------------------------------- 粵拼入門：可點讀音
+   凡標了 data-r 的元素點一下就播 audio/jyutping/<讀音>.mp3（邏輯見 app.js 的 renderJyutping）。
+   hover 給底色、playing 給硃紅底白字 ⇒ 使用者看得出來「剛才點的是哪一個」。 */
+.say { cursor: pointer; border-radius: 2px; }
+.say:hover { background: var(--paper-2); }
+.say:active { background: var(--line); }
+.say.playing { background: var(--accent); color: #fff; }
+.say.playing .muted { background: var(--accent); color: #fff; }
