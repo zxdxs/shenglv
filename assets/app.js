@@ -585,8 +585,12 @@
   }
 
   function playJp(node) {
+    /* data-src 優先：給「一句話」型示範用，直接指向既有音檔
+       （例如「南對北」＝ audio/v1/0001.mp3，那本來就是全本第一句，不必重做）。
+       其餘一律用 data-r 組出 audio/jyutping/<讀音>.mp3。 */
+    var src = node.getAttribute('data-src');
     var r = node.getAttribute('data-r');
-    if (!r) return;
+    if (!src && !r) return;
     if (!AU_JP) {
       AU_JP = document.createElement('audio');
       AU_JP.preload = 'none';
@@ -596,7 +600,7 @@
     if (JP_NOW && JP_NOW !== node) JP_NOW.classList.remove('playing');
     JP_NOW = node;
     node.classList.add('playing');
-    AU_JP.src = 'audio/jyutping/' + r + '.mp3';
+    AU_JP.src = src || ('audio/jyutping/' + r + '.mp3');
     try {
       var p = AU_JP.play();
       if (p && p.catch) p.catch(function () { stopJp(); });
@@ -604,11 +608,14 @@
   }
 
   function renderJyutping() {
-    var nodes = document.querySelectorAll('[data-r]');
+    /* 一定要同時選 data-src：只選 [data-r] 會讓「南對北」那種指向既有音檔的
+       示範沒有綁到 click，點了完全沒反應（實測踩過）。 */
+    var nodes = document.querySelectorAll('[data-r], [data-src]');
     if (!nodes.length) return;          /* 不在這一頁就什麼都不做 */
     var seen = {};
     Array.prototype.forEach.call(nodes, function (n) {
-      seen[n.getAttribute('data-r')] = 1;
+      var r = n.getAttribute('data-r');
+      if (r) seen[r] = 1;
       n.setAttribute('title', '點一下聽發音');
       n.addEventListener('click', function () { playJp(n); });
     });
