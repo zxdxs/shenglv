@@ -218,7 +218,7 @@
     var brand = el('a', 'brand');
     brand.href = 'index.html';
     brand.appendChild(document.createTextNode('中文聲韻'));
-    brand.appendChild(el('small', null, '粵　語　讀　經　典'));
+    brand.appendChild(el('small', null, '基於劉節五卷本聲律發蒙的方言吟誦'));
     head.appendChild(brand);
     var nav = el('nav', 'main');
     nav.setAttribute('aria-label', '主導覽');
