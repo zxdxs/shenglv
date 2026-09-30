@@ -219,7 +219,7 @@
     var brand = el('a', 'brand');
     brand.href = 'index.html';
     brand.appendChild(document.createTextNode('中文聲韻'));
-    brand.appendChild(el('small', null, '基於劉節五卷本《聲律發蒙》，共建中文聲韻庫'));
+    brand.appendChild(el('small', null, '集各地各派吟誦，傳中文千古聲韻'));
     head.appendChild(brand);
     var nav = el('nav', 'main');
     nav.setAttribute('aria-label', '主導覽');
