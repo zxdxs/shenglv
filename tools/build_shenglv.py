@@ -489,7 +489,7 @@ def main():
         return os.path.getsize(p)
 
     meta = {
-        'title': '聲律發蒙·粵語',
+        'title': '中文聲韻',
         'subtitle': '全本 106 韻',
         'source': '《聲律發蒙》元·祝明撰　明萬曆刊本（公有領域）',
         'jyutpingSource': 'rime-cantonese（CC-BY-4.0 / ODbL）',

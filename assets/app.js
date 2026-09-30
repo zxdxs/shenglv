@@ -1,4 +1,4 @@
-/* 聲律發蒙·粵語 —— 前端（全本 106 韻 + 逐行粵語音頻）
+/* 中文聲韻 —— 前端（全本 106 韻 + 逐行粵語音頻）
    無框架、無後端、無追蹤。
    資料來源：assets/data.js（索引）、assets/chars.js（逐字粵拼）、
             assets/vol1..5.js（分卷內容，按需載入）、assets/duizhang.js（對帳表）
@@ -217,7 +217,7 @@
     var head = el('div', 'wrap');
     var brand = el('a', 'brand');
     brand.href = 'index.html';
-    brand.appendChild(document.createTextNode('聲律發蒙'));
+    brand.appendChild(document.createTextNode('中文聲韻'));
     brand.appendChild(el('small', null, '粵　語　讀　經　典'));
     head.appendChild(brand);
     var nav = el('nav', 'main');
