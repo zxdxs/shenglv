@@ -225,7 +225,7 @@
       { label: '吳語', href: 'fangyan/?fam=wu', on: true },
       { label: '客家話', href: 'wip.html' },
       { label: '閩語', href: 'fangyan/?fam=min', on: true },
-      { label: '＋ 添加', href: 'wip.html', add: true }
+      { label: '＋ 添加', href: 'tigong.html', add: true }
     ]}
   ];
 
@@ -1110,6 +1110,7 @@
     var g = $('#canyuGrid');
     if (!g) return;
     [['contribute.html', '提供錄音', '以吟誦學會為單位認領，手機錄音即可；著作權歸吟誦者'],
+     ['tigong.html', '提供文本', '其他方言的字音標注，填表一鍵寄給維護者——純靜態，不上傳'],
      ['jiucuo.html', '糾錯', '全本文字、反切、粵拼、入聲標記——每一條採納都記入榮譽榜'],
      ['rongyu.html', '榮譽榜', '吟誦、文本標注、糾錯三類貢獻者——空著的榜，本身就是邀請']
     ].forEach(function (p) {
