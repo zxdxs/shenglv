@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>方言 · 建設中 —— 中文聲韻</title>
+<meta name="description" content="西南官話、吳語、客家話、閩語正處於歸集框架的建設階段——以學會為單位認領、每韻三個月期限。想認領或留言，填表一鍵寄給維護者；純靜態，不上傳。">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="wip.html">
+
+<header class="site" id="nav"></header>
+
+<main class="wrap">
+
+  <h1>方言 · 建設中</h1>
+  <p class="lead">
+    歸集框架已就位——以學會為單位認領、每韻三個月期限、逾期自動釋放。
+    粵語是第一個落地示例；以下四支方言尚無學會認領，<b>空著的格，等第一支學會來認</b>。
+  </p>
+
+  <div class="card accent">
+    <h3 style="margin-top:0;">待落地的方言</h3>
+    <p><b>西南官話　吳語　客家話　閩語</b>——都在歸集框架的名單上。
+      想讓哪一支先落地？最直接的辦法：到<a href="fengong.html#fy">歸集進度·方言視圖</a>認領第一首，
+      或以學會為單位<a href="contribute.html">提供錄音</a>。方言文本由維護者整理，
+      想了解進度或提議新方言，見下方留言。</p>
+    <p class="muted" style="margin-bottom:0;">方言名單以五支起步，隨時可加（導航「方言 ▾ → ＋ 添加」）。</p>
+  </div>
+
+  <div class="card">
+    <h3>留言</h3>
+    <p>
+      想認領哪支方言、想建議某支優先、或想了解某支的進展——都可以寫在這裡。
+      純靜態：內容只存在您的瀏覽器裡，按「生成郵件」打開郵件客戶端寄給維護者，
+      按「複製內容」複製到剪貼板自行發送。<b>不會上傳到任何伺服器。</b>
+    </p>
+    <form class="card form" id="wipForm" onsubmit="return false;">
+      <label>我想認領／建議（選填）
+        <input id="w-dia" placeholder="如：吳語·甌江片，或「建議優先做西南官話」">
+      </label>
+      <label>留言 <span class="req">*</span>
+        <textarea id="w-msg" rows="6" required placeholder="寫下您的留言：想認領哪一卷哪一韻、所在學會、師承，或任何想說的。"></textarea>
+      </label>
+      <label>署名與聯繫方式 <span class="req">*</span>
+        <input id="w-name" required placeholder="怎麼稱呼您／郵箱或微信">
+      </label>
+      <div class="row">
+        <button type="button" class="btn" id="b-mail">生成郵件</button>
+        <button type="button" class="btn" id="b-copy">複製內容</button>
+      </div>
+      <p class="muted" id="f-tip"></p>
+      <p class="muted" style="margin-top:.8rem;">
+        或微信聯絡維護者（課孫翁）——掃一掃下方二維碼：
+      </p>
+      <img class="wx-qrcode" src="assets/wx-qrcode.jpg" alt="微信二維碼：課孫翁" loading="lazy">
+    </form>
+  </div>
+
+</main>
+
+<footer class="site" id="foot"></footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/chars.js"></script>
+<script src="assets/registry.js"></script>
+<script src="assets/honor.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  function val(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+  function build() {
+    return [
+      '方言·建設中 留言',
+      '方言：' + (val('w-dia') || '—'),
+      '留言：' + val('w-msg'),
+      '署名與聯繫：' + val('w-name'),
+      '（來自 shenglv.org.cn 方言·建設中）'
+    ].join('\n');
+  }
+  function check() {
+    if (!val('w-msg')) { alert('請先填寫留言。'); return false; }
+    if (!val('w-name')) { alert('請填寫署名與聯繫方式。'); return false; }
+    return true;
+  }
+  var m = document.getElementById('b-mail');
+  if (m) m.addEventListener('click', function () {
+    if (!check()) return;
+    window.location.href = 'mailto:hello@solve-lab.cn?subject=' +
+      encodeURIComponent('方言·建設中留言') + '&body=' + encodeURIComponent(build());
+  });
+  var c = document.getElementById('b-copy');
+  if (c) c.addEventListener('click', function () {
+    if (!check()) return;
+    var body = build();
+    function done() {
+      var t = document.getElementById('f-tip');
+      if (t) t.textContent = '已複製。請貼到郵件，寄給 hello@solve-lab.cn。';
+    }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = body; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); }
+      catch (e) { alert('複製失敗，請手動選取。'); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(body).then(done, fallback);
+    } else { fallback(); }
+  });
+})();
+</script>
+</body>
+</html>

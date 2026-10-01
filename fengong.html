@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>歸集進度 —— 中文聲韻</title>
+<meta name="description" content="歸集進度：以《聲律發蒙》劉節五卷本 376 首分工表為準，逐韻逐章徵集聲音證據——以吟誦學會為單位認領、每韻三個月期限、逾期自動釋放回待認領。總表公開，誰都能看見哪些還空著。">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="fengong.html">
+
+<header class="site" id="nav"></header>
+
+<main class="wrap">
+
+  <h1>歸集進度</h1>
+  <p class="muted" style="margin:.2rem 0 .6rem;">376 首分工表 · 篇目／方言雙視圖——誰在認領、誰已收錄、哪些還空著。</p>
+  <p class="lead">
+    底本以劉節五卷本《聲律發蒙》為準，逐韻逐章為中文聲韻歸集聲音證據——
+    徵集各方言、各流派的真人吟誦。
+    <b>以學會為單位認領</b>，不以個人；認領後給三個月期限，<b>逾期自動釋放</b>回「待認領」。
+    總表公開——空著的行，本身就是推動力。
+  </p>
+
+  <div class="card accent">
+    <p><b>這個表怎麼看：</b>每一行是一首（一章），共 376 首。
+      一首可以有多個方言版本，所以「版本」欄會隨收錄成長；
+      而「認領狀態」永遠顯示 <b>誰、用哪支方言、什麼師承、核到哪一步</b>——
+      不用一個「完成」打勾，元數據本身就是這站的價值。</p>
+    <p class="muted">
+      已收錄的版本在〈<a href="quanben.html">全本 106 韻</a>〉對應韻部可直接並排聽；
+      切換上方「<b>方言</b>」視圖，看各支方言離覆蓋全書還有多遠。
+      認領與提供錄音方式見〈<a href="canyu.html">共建與貢獻墻</a>〉。
+    </p>
+  </div>
+
+  <div class="viewtabs" id="fgViews">
+    <button type="button" id="fgViewListBtn" aria-pressed="true">篇目</button>
+    <button type="button" id="fgViewDiaBtn" aria-pressed="false">方言</button>
+  </div>
+
+  <section id="fgViewList">
+    <div class="stats" id="fgStats"></div>
+
+    <div class="legend-line">
+      <span><span class="badge open">待認領</span> 尚無任何學會認領</span>
+      <span><span class="badge claimed">已認領</span> 進行中，期限內</span>
+      <span><span class="badge overdue">已逾期</span> 超過期限，可重新認領</span>
+      <span><span class="badge recorded">已收錄</span> 已有真人吟誦</span>
+      <span><span class="badge verified">已核</span> 讀音與錄音已核驗</span>
+      <span><span class="badge pending">待核</span> 尚未核驗</span>
+    </div>
+
+    <div class="filters" id="fgFilters"></div>
+
+    <div id="fgBody"></div>
+  </section>
+
+  <section id="fgViewDia" hidden>
+    <p class="muted">每一支方言離「覆蓋全書」還有多遠——圓點一格一首：<span class="dot rec"></span>已收錄　<span class="dot claim"></span>已認領　<span class="dot overdue"></span>已逾期　<span class="dot"></span>待認領。</p>
+    <div id="fyTabs"></div>
+    <div class="stats" id="fyStats"></div>
+    <div id="fyGrid"></div>
+    <div id="fyList"></div>
+  </section>
+
+  <div class="card">
+    <h3>機制</h3>
+    <ul>
+      <li><b>以學會為單位認領</b>：建議一次認領一整韻（三至四首，四十八至六十四句），
+        期限三個月；學會內部協調吟誦者。</li>
+      <li><b>逾期自動釋放</b>：已認領超過期限者，頁面即時標為「已逾期」，任何學會可重新認領。
+        已收錄的成果不因期限釋放。</li>
+      <li><b>永遠顯示元數據</b>：方言點、吟誦者、師承、認領學會、審核狀態，逐行公開。</li>
+      <li><b>審核</b>：已收錄版本分「待核／已核」兩檔——核讀音（對照反切）與錄音品質。</li>
+    </ul>
+  </div>
+
+</main>
+
+<footer class="site" id="foot"></footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/chars.js"></script>
+<script src="assets/registry.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

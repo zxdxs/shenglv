@@ -1,0 +1,165 @@
+{
+  "_comment": "人工維護的認領／收錄登記（分工表活數據）。build_registry.py 讀取此檔 ＋ assets/vol1..5.js → assets/registry.js（站上唯一資料來源）。新增認領請在此檔追加 claims；方言詞表如需增補片區，改 dialects。欄位規則見 build_registry.py 的校驗（不合法會中止，不產出資料）。音頻約定：audio/human/<方言id>/<序號>.mp3（如 audio/human/wu/0001.mp3＝吳語第1首）；整韻一段可在該韻各首的 audio 填同一路徑。status: claimed=已認領（含 claimDate/deadline）、recorded=已收錄（必須有 audio 且檔案存在）；audit: pending=待核、verified=已核。",
+  "claimMonths": 3,
+  "dialects": [
+    {
+      "id": "yue",
+      "name": "粵語",
+      "pian": [
+        {
+          "id": "guangfu",
+          "name": "廣府片"
+        },
+        {
+          "id": "siyi",
+          "name": "四邑片"
+        },
+        {
+          "id": "gaoyang",
+          "name": "高陽片"
+        },
+        {
+          "id": "wuhua",
+          "name": "吳化片"
+        },
+        {
+          "id": "goulou",
+          "name": "勾漏片"
+        },
+        {
+          "id": "qinlian",
+          "name": "欽廉片"
+        },
+        {
+          "id": "yongxun",
+          "name": "邕潯片"
+        }
+      ]
+    },
+    {
+      "id": "xinan",
+      "name": "西南官話",
+      "pian": [
+        {
+          "id": "chuanqian",
+          "name": "川黔片"
+        },
+        {
+          "id": "xishu",
+          "name": "西蜀片（含岷江小片）"
+        },
+        {
+          "id": "yunnan",
+          "name": "雲南片"
+        },
+        {
+          "id": "huguang",
+          "name": "湖廣片"
+        },
+        {
+          "id": "guiliu",
+          "name": "桂柳片"
+        }
+      ]
+    },
+    {
+      "id": "wu",
+      "name": "吳語",
+      "pian": [
+        {
+          "id": "taihu",
+          "name": "太湖片"
+        },
+        {
+          "id": "taizhou",
+          "name": "台州片"
+        },
+        {
+          "id": "oujiang",
+          "name": "甌江片"
+        },
+        {
+          "id": "jinqu",
+          "name": "金衢片"
+        },
+        {
+          "id": "shangli",
+          "name": "上麗片"
+        },
+        {
+          "id": "xuanzhou",
+          "name": "宣州片"
+        }
+      ]
+    },
+    {
+      "id": "hakka",
+      "name": "客家話",
+      "pian": [
+        {
+          "id": "yuetai",
+          "name": "粵台片"
+        },
+        {
+          "id": "yuezhong",
+          "name": "粵中片"
+        },
+        {
+          "id": "yuebei",
+          "name": "粵北片"
+        },
+        {
+          "id": "huizhou",
+          "name": "惠州片"
+        },
+        {
+          "id": "tingzhou",
+          "name": "汀州片"
+        },
+        {
+          "id": "ninglong",
+          "name": "寧龍片"
+        },
+        {
+          "id": "yugui",
+          "name": "於桂片"
+        },
+        {
+          "id": "tonggu",
+          "name": "銅鼓片"
+        }
+      ]
+    },
+    {
+      "id": "min",
+      "name": "閩語",
+      "pian": [
+        {
+          "id": "minnan",
+          "name": "閩南片"
+        },
+        {
+          "id": "mindong",
+          "name": "閩東片"
+        },
+        {
+          "id": "minbei",
+          "name": "閩北片"
+        },
+        {
+          "id": "minzhong",
+          "name": "閩中片"
+        },
+        {
+          "id": "puxian",
+          "name": "莆仙片"
+        },
+        {
+          "id": "qiongwen",
+          "name": "瓊文片"
+        }
+      ]
+    }
+  ],
+  "claims": []
+}

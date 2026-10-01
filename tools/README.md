@@ -9,6 +9,7 @@
 | `assets/chars.js` | 7,730 字 → 粵拼（含入聲標記、多音讀音、選音依據） |
 | `assets/vol1..5.js` | 各卷完整內容（按需載入） |
 | `assets/duizhang.js` | 反切對帳全表 |
+| `assets/registry.js` | 分工表：376 首篇目主表 ＋ 認領／收錄登記（build_registry.py 產生，獨立於 build_shenglv.py） |
 | `sitemap.xml` | 由站上**實際存在**的 `.html` 推導，新頁面自動納入 |
 
 ---
@@ -18,7 +19,9 @@
 | 檔案 | 做什麼 |
 |---|---|
 | `build_shenglv.py` | **資料產線**：語料 ＋ 粵拼字典 → 上列產生檔。四道校驗（三方對齊／讀音覆蓋／反切對帳／音頻編號），任一不過即中止、不產出資料 |
-| `precheck.py` | **上站前自檢十項**：標籤配平、資源引用、選取器、資料檔、連結、宣稱一致、音頻完整性、字表完整性、粵拼點讀音檔、入聲本調 |
+| `build_registry.py` | **分工表產線**：`assets/vol1..5.js` ＋ `registry-claims.json` → `assets/registry.js`。只依賴已提交的檔案，本倉庫即可重建；與 build_shenglv.py 互不覆蓋 |
+| `registry-claims.json` | **人工維護的認領／收錄登記**（分工表活數據）：方言詞表（區→片）＋ claims 明細。新增認領、增補片區都改這裡，再跑 build_registry.py |
+| `precheck.py` | **上站前自檢十項**：標籤配平、資源引用、選取器、資料檔、連結、宣稱一致、音頻完整性、字表完整性、粵拼點讀音檔、入聲本調；另含分工表校驗（⑪：主表與 vol 檔逐行一致、認領記錄逐條校驗） |
 | `render_test.js` | 無瀏覽器渲染測試：逐頁載入並實跑前端，確認動態區塊真的產出（空集合不得冒充通過） |
 | `live_check.py` | 線上檢查：逐頁渲染 ＋ 靜態資源可達性 |
 | `audio_optimize.py` | 音頻後處理：去頭尾靜音 ＋ 降位元率 |
@@ -66,6 +69,9 @@ python3 tools/build_shenglv.py \
     --site . \
     --gd <語料目錄> \
     --dict <dict.yaml>
+
+# 分工表（只依賴已提交檔案，本倉庫即可重建；新增認領先改 registry-claims.json）
+python3 tools/build_registry.py
 
 # 上站前自檢
 python3 tools/precheck.py

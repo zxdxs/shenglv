@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-precheck.py —— 聲律發蒙·粵語站 上站前自檢（全本 106 韻＋音頻）
+precheck.py —— 聲律發蒙·中文聲韻站 上站前自檢（全本 106 韻＋音頻＋分工表）
 
 每一項都必須有非零計數才算通過（空集合不得冒充通過）。
 
@@ -15,6 +15,9 @@ precheck.py —— 聲律發蒙·粵語站 上站前自檢（全本 106 韻＋�
 ⑧ 字表完整性                 vol*.js 內出現的每個字都要在 chars.js 有讀音或明確標為待考
 ⑨ 粵拼點讀音檔完整性（新）     jyutping.html 每個 data-r 都要有 audio/jyutping/<讀音>.mp3，
                             且不得有孤兒音檔。音檔缺失是「點了沒聲音」的靜默失敗，必須擋。
+⑩ 入聲本調                   chars.js 入聲字不得標 2／4／5 調（那是變調，不是讀書音）
+⑪ 分工表（新）                registry.js 主表與 vol 檔逐行一致；認領記錄的序號、
+                            方言點詞表、狀態／審核枚舉、日期、音頻存在性逐條校驗
 """
 
 import json, os, re, sys
@@ -28,7 +31,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 _site_sub = os.path.join(HERE, 'site')
 SITE = _site_sub if os.path.isdir(_site_sub) else os.path.dirname(HERE)
 ASSETS = os.path.join(SITE, 'assets')
-PAGES = ['index.html', 'weihe.html', 'quanben.html', 'duizhang.html', 'jyutping.html', 'contribute.html', 'about.html', '404.html']
+PAGES = ['index.html', 'weihe.html', 'fengong.html', 'canyu.html', 'wip.html', 'quanben.html',
+         'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', '404.html']
 
 fails, warns, checks = [], [], []
 
@@ -99,8 +103,11 @@ def main():
             u = m.group(1)
             if u.startswith(('http', 'mailto:', '#', 'data:')):
                 continue
+            u2 = u.split('#')[0].split('?')[0]
+            if not u2:
+                continue
             refs += 1
-            fp = os.path.join(SITE, u.lstrip('/'))
+            fp = os.path.join(SITE, u2.lstrip('/'))
             if not os.path.exists(fp):
                 missing.append(f'{page} → {u}（不存在）')
             elif u.endswith('.mp3') and os.path.getsize(fp) < 800:
@@ -287,6 +294,69 @@ def main():
         d = Counter(r[-1] for _, r in ru_pairs)
         ok('⑩ 入聲本調', f'{len(ru_pairs)} 個入聲字全部落在第 1、3、6 調'
                          f'（上陰入 {d.get("1",0)}、下陰入 {d.get("3",0)}、陽入 {d.get("6",0)}）')
+
+    # ---------- ⑪ 分工表（registry：篇目主表＋認領/收錄登記）----------
+    # 主表必須與 vol 檔【逐行一致】（首句＋坐標）；認領記錄逐條校驗。
+    try:
+        REG = strip_js(open(os.path.join(ASSETS, 'registry.js'), encoding='utf-8').read())
+    except Exception as e:
+        bad('⑪ 分工表', f'registry.js 無法解析：{e}')
+        return report()
+    poems, claims, dialects = REG.get('poems', []), REG.get('claims', []), REG.get('dialects', [])
+    errs = []
+    if len(poems) != 376:
+        errs.append(f'篇目 {len(poems)} ≠ 376')
+    if [p.get('seq') for p in poems] != list(range(1, 377)):
+        errs.append('序號不連續 1..376')
+    pidx = 0
+    for vol in range(1, 6):
+        V = strip_js(open(os.path.join(ASSETS, f'vol{vol}.js'), encoding='utf-8').read())
+        for r in V['rhymes']:
+            for ch in r['chapters']:
+                if pidx >= len(poems):
+                    errs.append('poems 比 vol 檔少'); break
+                p = poems[pidx]
+                first = ch['lines'][0]['t'] if ch['lines'] else ''
+                if (p.get('rhyme') != r['name'] or p.get('volId') != V['id']
+                        or p.get('chapter') != ch['title'] or p.get('first') != first
+                        or p.get('nLines') != len(ch['lines'])):
+                    errs.append(f'第 {p.get("seq")} 首與 vol 檔不符'
+                                f'（{p.get("rhyme")}/{p.get("chapter")}「{p.get("first")}」）')
+                pidx += 1
+    if pidx != len(poems):
+        errs.append(f'poems 多出 {len(poems) - pidx} 首')
+    dmap = {d['id']: d for d in dialects}
+    seen = set()
+    for c in claims:
+        seq = c.get('seq')
+        if not isinstance(seq, int) or not (1 <= seq <= 376):
+            errs.append(f'{c.get("id")}: 序號非法')
+        d = c.get('dialect') or {}
+        dn = dmap.get(d.get('d'))
+        if not dn or d.get('pian') not in {p['id'] for p in dn['pian']} or not d.get('dian'):
+            errs.append(f'{c.get("id")}: 方言點不在詞表')
+        if c.get('status') not in ('claimed', 'recorded'):
+            errs.append(f'{c.get("id")}: 狀態 {c.get("status")} 非法')
+        if c.get('audit') not in ('pending', 'verified'):
+            errs.append(f'{c.get("id")}: 審核 {c.get("audit")} 非法')
+        for k in ('claimDate', 'deadline'):
+            if not re.match(r'^\d{4}-\d{2}-\d{2}$', str(c.get(k) or '')):
+                errs.append(f'{c.get("id")}: {k} 非法')
+        if str(c.get('deadline') or '') < str(c.get('claimDate') or ''):
+            errs.append(f'{c.get("id")}: 期限早於認領日期')
+        if c.get('status') == 'recorded' and not (
+                c.get('audio') and os.path.exists(os.path.join(SITE, c['audio'].lstrip('/')))):
+            errs.append(f'{c.get("id")}: 已收錄但音頻缺失')
+        key = (seq, d.get('d'), d.get('pian'), d.get('dian'))
+        if key in seen:
+            errs.append(f'{c.get("id")}: 與他條重複')
+        seen.add(key)
+    if not poems:
+        bad('⑪ 分工表', 'poems 為空（產線可能靜默失敗）')
+    elif errs:
+        bad('⑪ 分工表', f'{len(errs)} 處問題：{errs[:6]}')
+    else:
+        ok('⑪ 分工表', f'篇目 {len(poems)} 首與 vol 檔逐行一致；認領 {len(claims)} 條全數通過')
 
     report()
 

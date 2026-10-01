@@ -15,7 +15,7 @@ const vm = require('vm');
 // 同時支援兩種放置方式：舊佈局（上一層有 site/）與倉庫佈局（上一層就是站點）
 const _siteSub = path.join(__dirname, '..', 'site');
 const SITE = fs.existsSync(_siteSub) ? _siteSub : path.join(__dirname, '..');
-const PAGES = ['index.html', 'weihe.html', 'quanben.html', 'duizhang.html', 'jyutping.html', 'contribute.html', 'about.html', '404.html'];
+const PAGES = ['index.html', 'weihe.html', 'fengong.html', 'canyu.html', 'wip.html', 'quanben.html', 'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', '404.html'];
 
 /* ------------------------------------------------------------ 最小 DOM 墊片 */
 function makeNode(tag) {
@@ -104,12 +104,19 @@ function buildDoc(html, page, loadScript) {
 
 /* ------------------------------------------------------------------ 測試 */
 const EXPECT = {
-  'index.html': [['#stats', 18], ['#demo', 200], ['#links', 9]],
+  'index.html': [['#stats', 24], ['#demo', 200], ['#links', 15]],
   'weihe.html': [],                       // 純內容頁：無動態區塊，只需不拋例外
+                                          // 表單結構與按鈕邏輯由 precheck 標籤配平＋瀏覽器抽查把關
+  'jiucuo.html': [],                       // 純靜態糾錯表單頁：同上
+  'rongyu.html': [['#honorStats', 6], ['#honorBody', 6]],  // 三類統計＋三類空榜列表
+  'fengong.html': [['#fgStats', 18], ['#fgBody', 500], ['#fyTabs', 5], ['#fyStats', 12], ['#fyGrid', 100]],
   'quanben.html': [['#volTabs', 5], ['#rhymeNav', 15], ['#rhymeBody', 500]],
+  'canyu.html': [['#canyuGrid', 9]],
+  'wip.html': [],
   'duizhang.html': [['#dzStats', 12], ['#dzFilters', 9], ['#dzBody', 500]],
   'about.html': [['#variants', 27], ['#aboutStats', 15]],
-  'contribute.html': [],                  // 純內容頁（徵集錄音）：無動態區塊，只需不拋例外
+  'contribute.html': [],                  // 純內容頁＋一個動態計數（#contributeCoverage）：由 app.js renderContribute 填值，
+                                          // 該計數值與 registry 一致性由 precheck ⑪ 與人工核對把關
   'jyutping.html': [],                    // 純內容頁（粵拼入門）：五張表都是靜態 HTML，
                                           // 由 precheck 的標籤配平與人工核對把關（見提交說明）
   '404.html': []
@@ -146,7 +153,7 @@ const problems = [];
 
     let err = null;
     try {
-      for (const f of ['assets/data.js', 'assets/chars.js']) {
+      for (const f of ['assets/data.js', 'assets/chars.js', 'assets/registry.js']) {
         vm.runInContext(fs.readFileSync(path.join(SITE, f), 'utf8'), sandbox, { filename: f });
       }
       vm.runInContext(fs.readFileSync(path.join(SITE, 'assets', 'app.js'), 'utf8'), sandbox,

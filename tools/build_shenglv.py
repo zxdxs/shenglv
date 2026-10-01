@@ -51,8 +51,8 @@ WORK_OUT = WORK
 # 站點對外網域（sitemap 用）。改用獨立域名後不再寫死舊的 shenglv.solve-lab.cn。
 BASE_URL = 'https://shenglv.org.cn'
 # sitemap 的【順序偏好】；實際清單由 SITE 下存在的 .html 推導，新頁面會自動納入。
-PAGE_ORDER = ['index.html', 'weihe.html', 'quanben.html', 'duizhang.html',
-              'jyutping.html', 'about.html', 'contribute.html']
+PAGE_ORDER = ['index.html', 'weihe.html', 'fengong.html', 'canyu.html', 'wip.html', 'quanben.html', 'jiucuo.html', 'rongyu.html',
+              'duizhang.html', 'jyutping.html', 'about.html', 'contribute.html']
 
 VOLUMES = [
     ('v1', '第一卷 · 上平聲', '上平聲', '聲律發蒙_童蒙誦讀本_第一卷·上平聲.md'),

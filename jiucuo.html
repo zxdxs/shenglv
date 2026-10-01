@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>糾錯 —— 中文聲韻</title>
+<meta name="description" content="為《聲律發蒙》全本站糾錯：底本文字、反切、粵拼標注、入聲標記、多音字選音、分工表數據。填寫下表，一鍵生成郵件寄給維護者，或複製內容自行發送。純靜態表單，不收集、不上傳任何數據。">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .form label { display: block; margin: .95em 0 .3em; font-weight: 600; }
+  .form .req { color: #a33; }
+  .form input, .form select, .form textarea {
+    width: 100%; box-sizing: border-box; padding: .5em .6em;
+    font-size: 1em; border: 1px solid #b8b8b8; border-radius: 4px;
+    background: #fff; font-family: inherit; color: #111;
+  }
+  .form textarea { resize: vertical; }
+  .form .chk { font-weight: 400; display: flex; gap: .5em; align-items: flex-start; }
+  .form .chk input { width: auto; margin-top: .28em; }
+  .form .row { display: flex; gap: .8em; margin-top: 1.3em; flex-wrap: wrap; }
+  .btn { background: #222; color: #fff; border: none; padding: .6em 1.3em;
+         font-size: 1em; border-radius: 4px; cursor: pointer; }
+  .btn:hover { background: #444; }
+</style>
+</head>
+<body data-page="jiucuo.html">
+
+<header class="site" id="nav"></header>
+
+<main class="wrap">
+
+  <h1>糾錯</h1>
+  <p class="lead">
+    本站的立身之本，是把每個字的反切、韻部、入聲、讀音逐字釘準。
+    但全書 <b><span data-m="lineCount"></span> 行、<span data-m="needChars"></span> 字</b>，
+    錯漏在所難免——歡迎指正。<b>每一條被採納的糾錯，都會記入〈<a href="rongyu.html">榮譽榜</a>〉</b>（可匿名）。
+  </p>
+
+  <div class="card">
+    <p><b>可以糾什麼</b></p>
+    <ul>
+      <li><b>底本文字</b>——某卷某韻某章的用字，與影印本不符；</li>
+      <li><b>反切</b>——與本韻字譜或韻書（《廣韻》《集韻》等）不符；</li>
+      <li><b>粵拼標注</b>——機器示範的讀音有誤（本站以 rime-cantonese 為基礎，難免有漏）；</li>
+      <li><b>入聲標記</b>——-p／-t／-k 誤標、漏標；</li>
+      <li><b>多音字選音</b>——該處當讀何音、依據是什麼；</li>
+      <li><b>分工表數據</b>——認領狀態、方言點、師承等登記錯誤。</li>
+    </ul>
+    <p class="muted">標為「待考」的罕用字，暫不視為錯——本站明確不掩蓋不確定。</p>
+  </div>
+
+  <div class="card">
+    <p><b>這份表單收集什麼？</b>什麼都不收集。</p>
+    <p>
+      與〈提供文本〉同一套設計：純靜態，沒有帳號、後端或數據庫。
+      您填的內容只存在瀏覽器裡——按「生成郵件」打開郵件客戶端寄給維護者，
+      按「複製內容」複製到剪貼板自行發送。<b>不會上傳到任何伺服器。</b>
+    </p>
+  </div>
+
+  <form class="card form" id="fgForm" onsubmit="return false;">
+    <label>出錯位置 <span class="req">*</span>
+      <input id="f-where" required placeholder="例如：卷一·一東·第一章·第 3 句「…」中的「東」字">
+    </label>
+    <label>原文（現有的內容）<span class="req">*</span>
+      <input id="f-old" required placeholder="目前網站上寫的是什麼">
+    </label>
+    <label>建議改為 <span class="req">*</span>
+      <input id="f-new" required placeholder="您認為應是">
+    </label>
+    <label>依據（選填，越具體越好）
+      <textarea id="f-evidence" rows="4"
+        placeholder="如：某反切／《廣韻》某韻／《集韻》／該方言實際讀音"></textarea>
+    </label>
+    <label>署名（可匿名，選填）
+      <input id="f-name" placeholder="留空則以「匿名」記入榮譽榜">
+    </label>
+    <label>聯繫方式（選填）
+      <input id="f-contact" placeholder="郵箱或微信，便於回覆採納與否">
+    </label>
+    <label class="chk"><input type="checkbox" id="f-ok" checked>
+      同意：若此糾錯被採納，記入榮譽榜並標注上述署名。</label>
+    <div class="row">
+      <button type="button" class="btn" id="b-mail">生成郵件</button>
+      <button type="button" class="btn" id="b-copy">複製內容</button>
+    </div>
+    <p class="muted" id="f-tip">
+      也可以直接寄到 <a href="mailto:hello@solve-lab.cn">hello@solve-lab.cn</a>，
+      或微信聯絡維護者（課孫翁）。
+    </p>
+  </form>
+
+  <h2>提交後會怎樣</h2>
+  <ol>
+    <li>維護者以反切、韻書與該方言實際讀音為準逐條核對；</li>
+    <li>採納 → 修正本站並記入榮譽榜；不採納 → 回覆理由（留有聯繫方式時）；</li>
+    <li>每筆糾錯的處置（採納／不採納）都會在回覆中說明。</li>
+  </ol>
+
+</main>
+
+<footer class="site" id="foot"></footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/chars.js"></script>
+<script src="assets/registry.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  function val(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+  function build() {
+    var L = [];
+    L.push('【糾錯】《聲律發蒙》中文聲韻');
+    L.push('出錯位置：' + (val('f-where') || '（未填）'));
+    L.push('原文：' + (val('f-old') || '（未填）'));
+    L.push('建議改為：' + (val('f-new') || '（未填）'));
+    L.push('依據：' + (val('f-evidence') || '（未填）'));
+    L.push('署名：' + (val('f-name') || '匿名'));
+    L.push('聯繫方式：' + (val('f-contact') || '（未填）'));
+    L.push('');
+    L.push('（由 jiucuo.html 表單生成）');
+    return L.join('\n');
+  }
+  function check() {
+    if (!val('f-where')) { alert('請填出錯位置'); return false; }
+    if (!val('f-old')) { alert('請填原文'); return false; }
+    if (!val('f-new')) { alert('請填建議改為'); return false; }
+    return true;
+  }
+  var m = document.getElementById('b-mail');
+  if (m) m.addEventListener('click', function () {
+    if (!check()) return;
+    window.location.href = 'mailto:hello@solve-lab.cn?subject=' +
+      encodeURIComponent('【糾錯】' + (val('f-where') || '')) +
+      '&body=' + encodeURIComponent(build());
+  });
+  var c = document.getElementById('b-copy');
+  if (c) c.addEventListener('click', function () {
+    if (!check()) return;
+    var body = build();
+    function done() {
+      var t = document.getElementById('f-tip');
+      if (t) t.textContent = '已複製。請貼到郵件，寄給 hello@solve-lab.cn。';
+    }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = body; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); }
+      catch (e) { alert('複製失敗，請手動選取下方文本。'); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(body).then(done, fallback);
+    } else { fallback(); }
+  });
+})();
+</script>
+</body>
+</html>

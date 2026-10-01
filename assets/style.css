@@ -55,6 +55,34 @@ nav.main a {
 }
 nav.main a:hover { background: var(--paper-2); text-decoration: none; }
 nav.main a[aria-current="page"] { background: var(--ink); color: var(--paper); }
+nav.main .ng { display: flex; align-items: baseline; gap: .1rem; margin-right: .95rem; }
+nav.main .ng:last-child { margin-right: 0; }
+nav.main .ngt { font-size: .7rem; color: var(--pin); letter-spacing: .14em; margin: 0 .25rem 0 .15rem; }
+
+nav.main details.nav-dia { position: relative; }
+.wx-qrcode { display: block; width: 180px; height: auto; margin: .6rem 0 0;
+  border: 1px solid var(--line); border-radius: 6px; }
+
+nav.main details.nav-dia > summary { list-style: none; cursor: pointer; padding: .3rem .7rem;
+  border-radius: 3px; color: var(--ink-soft); font-size: .92rem; letter-spacing: .04em; }
+nav.main details.nav-dia > summary::-webkit-details-marker { display: none; }
+nav.main details.nav-dia > summary::after { content: ' ▾'; font-size: .78em; color: var(--pin); }
+nav.main details.nav-dia[open] > summary { background: var(--paper-2); color: var(--ink); }
+nav.main details.nav-dia[open] > summary::after { content: ' ▴'; }
+.dia-menu { position: absolute; top: 100%; left: 0; margin-top: .4rem; background: var(--paper);
+  border: 1px solid var(--line); border-radius: 6px; padding: .5rem; min-width: 9.5rem;
+  display: flex; flex-direction: column; gap: .25rem; box-shadow: 0 4px 12px rgba(0,0,0,.08); z-index: 30; }
+.dia-chip { font-size: .88rem; padding: .3rem .55rem; border-radius: 4px; text-decoration: none;
+  color: var(--ink-soft); display: flex; align-items: baseline; gap: .35rem; }
+.dia-chip.on { background: var(--paper-2); font-weight: 700; color: var(--accent); }
+.dia-chip.on:hover { background: var(--line); text-decoration: none; }
+.dia-chip.off { color: var(--pin); cursor: default; }
+a.dia-chip.off { cursor: pointer; text-decoration: none; }
+a.dia-chip.off:hover { background: var(--paper-2); }
+.dia-div { border-top: 1px dashed var(--line); margin: .3rem 0 .15rem; }
+.dia-chip.add { color: var(--jyut); font-weight: 600; }
+.dia-chip.add:hover { background: var(--paper-2); text-decoration: none; }
+
 
 /* ---------- 通用 ---------- */
 main { padding: 2rem 0 3.5rem; }
@@ -152,6 +180,11 @@ td.r { font-family: "Menlo", "Consolas", monospace; color: var(--jyut); white-sp
 .filters { display: flex; gap: .9rem; flex-wrap: wrap; align-items: center; margin: .8rem 0; font-size: .88rem; color: var(--ink-soft); }
 .filters label { display: inline-flex; gap: .35rem; align-items: center; cursor: pointer; }
 
+.viewtabs { display: flex; gap: .4rem; margin: 1rem 0 .8rem; }
+.viewtabs button { font: inherit; font-size: .95rem; padding: .35rem 1rem; cursor: pointer;
+  background: var(--paper, #fff); color: var(--ink-soft, #555); border: 1px solid var(--line, #ccc); border-radius: 4px; }
+.viewtabs button[aria-pressed="true"] { background: var(--ink, #333); color: var(--paper, #fff); border-color: var(--ink, #333); font-weight: 700; }
+
 /* ---------- 頁尾 ---------- */
 footer.site { border-top: 1px solid var(--line); background: var(--paper-2); padding: 1.4rem 0 2rem; font-size: .84rem; color: var(--pin); }
 footer.site .cols { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
@@ -226,3 +259,63 @@ audio {
 .say:active { background: var(--line); }
 .say.playing { background: var(--accent); color: #fff; }
 .say.playing .muted { background: var(--accent); color: #fff; }
+
+/* ---------------------------------------------- 分工表（registry）
+   狀態色：待認領＝灰框、已認領＝藍、已逾期＝橙紅、已收錄＝綠、已核＝實心綠。 */
+.badge { display: inline-block; font-size: .74rem; padding: .06rem .45rem; border-radius: 2px;
+         border: 1px solid var(--line); color: var(--ink-soft); margin-right: .25rem; white-space: nowrap; }
+.badge.open { color: var(--pin); border-style: dashed; }
+.badge.claimed { color: var(--jyut); border-color: var(--jyut); background: #eef4f8; }
+.badge.overdue { color: var(--no); border-color: var(--no); background: #fdf0ec; }
+.badge.recorded { color: var(--ok); border-color: var(--ok); background: #eef6ef; }
+.badge.verified { color: #fff; background: var(--ok); border-color: var(--ok); }
+.badge.pending { color: var(--pin); }
+
+.vchip { display: inline-flex; align-items: center; gap: .3rem; font-size: .78rem;
+         border: 1px solid var(--line); border-radius: 3px; padding: .12rem .4rem;
+         margin: .12rem .3rem .12rem 0; background: var(--paper-2); color: var(--ink-soft); }
+.vchip .vplay { font: inherit; font-size: .68rem; cursor: pointer; border: 0; background: none;
+                color: var(--jyut); padding: 0 .1rem; }
+.vchip .vplay:hover { color: var(--accent); }
+.vchip.playing, .vchip.playing .vplay { background: var(--jyut); color: #fff; }
+
+.claim-list { margin-top: .4rem; }
+.claim-row { display: flex; flex-wrap: wrap; gap: .2rem 1.2rem; align-items: baseline;
+             padding: .45rem 0; border-bottom: 1px dotted var(--line); font-size: .9rem; }
+.claim-row:last-child { border-bottom: 0; }
+.claim-row .meta { display: flex; flex-wrap: wrap; gap: .3rem 1rem; align-items: baseline; }
+.claim-row .who { font-weight: 700; }
+.claim-row .dim { color: var(--pin); font-size: .82rem; }
+.claim-row .dl { font-size: .82rem; }
+.claim-row.overdue .dl { color: var(--no); font-weight: 700; }
+.claim-row audio { margin: 0; }
+
+/* 方言進度：106 韻網格 */
+.vol-sec { margin: 1rem 0; }
+.vol-sec h3 { margin: 1.2rem 0 .4rem; }
+.rhyme-grid { display: grid; gap: .35rem; grid-template-columns: repeat(auto-fill, minmax(5.6rem, 1fr)); }
+.rhyme-cell { display: block; border: 1px solid var(--line); border-radius: 3px;
+              padding: .3rem .4rem .25rem; text-decoration: none; color: inherit; background: var(--paper); }
+.rhyme-cell:hover { border-color: var(--ink-soft); text-decoration: none; }
+.rhyme-cell .rn { font-size: .88rem; }
+.rhyme-cell .dots { margin-top: .15rem; }
+.dot { display: inline-block; width: .62rem; height: .62rem; border-radius: 50%;
+       border: 1px solid var(--line); background: var(--paper-2); margin-right: .18rem; }
+.dot.rec { background: var(--ok); border-color: var(--ok); }
+.dot.claim { background: var(--jyut); border-color: var(--jyut); }
+.dot.overdue { background: var(--no); border-color: var(--no); }
+.rhyme-cell .n { font-size: .7rem; color: var(--pin); }
+
+/* 分工表工具列 */
+.toolbar { display: flex; gap: .6rem 1rem; flex-wrap: wrap; align-items: center;
+           margin: .8rem 0; font-size: .88rem; color: var(--ink-soft); }
+.toolbar select { font: inherit; font-size: .86rem; padding: .2rem .4rem;
+                  background: var(--paper); border: 1px solid var(--line); border-radius: 3px; }
+.toolbar label { display: inline-flex; gap: .3rem; align-items: center; }
+
+table.fg td.seq { font-family: "Menlo", "Consolas", monospace; color: var(--pin); white-space: nowrap; }
+table.fg td.first { max-width: 14rem; }
+table.fg tr.blank td { background: #fffdf6; }
+tr.blank td.seq { color: var(--pin); }
+
+.legend-line { font-size: .82rem; color: var(--pin); display: flex; gap: .2rem 1rem; flex-wrap: wrap; margin: .5rem 0; }
