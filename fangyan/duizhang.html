@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>反切對帳 —— 四川話 · 聲律發蒙（試作）</title>
+<meta name="description" content="把《聲律發蒙》各韻字譜的中古反切，與四川話六個方言點的今讀逐條對帳，並列出對不上的字。">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/sichuan.css">
+</head>
+<body data-family="sichuan" data-page="duizhang">
+
+<header class="site" id="nav"></header>
+
+<main class="wrap">
+
+  <h1>反切對帳</h1>
+  <p class="lead">
+    字譜裡每個字都附著中古反切。反切上字取聲母、下字取韻母與聲調——
+    所以它是一個<b>內建於書中的校驗碼</b>。這一頁拿它去對今天的讀音。
+  </p>
+
+  <div class="card">
+    <p><b>對帳怎麼做：</b>韻部隸屬於某一卷，卷即聲調。所以字譜裡的每個字，
+      它的<b>中古聲調</b>是已知的；把這個聲調按各點的演變規律換算，
+      就得到<b>期望的今調</b>。再與字典給的讀音比對。</p>
+    <table class="cmp" style="margin-top:.6rem">
+      <tr><th>中古聲調</th><th>期望今調（通音／岷江）</th><th>說明</th></tr>
+      <tr><td>平</td><td>1 或 2</td><td>依聲母清濁分陰平、陽平</td></tr>
+      <tr><td>上</td><td>3 或 4</td><td>全濁上歸去，故 4 亦可能</td></tr>
+      <tr><td>去</td><td>4</td><td></td></tr>
+      <tr><td>入</td><td>5</td><td>各點再各自處置：保留 5／歸 2／歸 4</td></tr>
+    </table>
+    <p class="muted" style="margin-top:.5rem">
+      選音也靠它：一個字若字典給了多條讀音，取聲調合於上表者。
+      例如「對」字典給 <code>dui2</code> 與 <code>dui4</code>，
+      反切為「都隊切」（去聲），故取 <code>dui4</code>。
+    </p>
+  </div>
+
+  <h2>逐韻對帳</h2>
+  <p class="muted">
+    選卷、選韻。表中列出該韻字譜的每個小韻：反切、中古聲調、以及六個點的今讀。
+    <span class="tag ru">紅棕色</span>為入聲字。
+  </p>
+  <div class="vol-tabs" id="dzVolTabs"></div>
+  <div class="rhyme-nav" id="dzRhymeNav"></div>
+  <div id="dzBody"></div>
+
+  <h2>已知對不上的地方</h2>
+
+  <h3>1　選音衝突：<span id="cf-count"></span> 字</h3>
+  <p class="muted">
+    這些字在字譜裡有中古聲調，但字典給的讀音<b>沒有一條符合期望今調</b>，
+    目前暫取字典的主讀音。要嘛是字典缺了那個讀音，要嘛是這個字在該方言裡走得不規則。
+  </p>
+  <div id="cf-list"></div>
+
+  <h3>2　宜賓的尖團次序問題：56 字</h3>
+  <p class="muted">
+    宜賓方案同時啟用了「尖團合併」（<code>^cyi→qi</code>）與「入聲 i5→ie5」，而前者排在後者<b>之後</b>。
+    於是入聲 -i 類字在改寫之後不再以 <code>cyi</code> 開頭，尖團規則就落空了：
+  </p>
+  <div id="sharp-list"></div>
+  <p class="muted">
+    結果是同一個方案裡出現<b>兩種行為</b>：齊 <code>cyi2→qi2</code>（合併），
+    但七 <code>cyi5→cye5</code>（保留尖音）。成都同批字都是 <code>qi2</code>。
+    這<b>不是語言事實，是方案規則次序的問題</b>；本站未自行修正，照原樣呈現並在此標明。
+  </p>
+
+  <h3>3　字典未收：<span id="ms-count"></span> 字</h3>
+  <p class="muted">這些字在蜀拼字典裡查不到，本站標「—」，<b>不臆造讀音</b>。</p>
+  <div id="ms-list"></div>
+
+</main>
+
+<footer class="site" id="foot"></footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/chars.js"></script>
+<script src="assets/vol1.js"></script>
+<script src="assets/vol2.js"></script>
+<script src="assets/vol3.js"></script>
+<script src="assets/vol4.js"></script>
+<script src="assets/vol5.js"></script>
+<script src="assets/duizhang.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

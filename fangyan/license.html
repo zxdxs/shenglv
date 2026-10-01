@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>授權 —— 四川話 · 聲律發蒙（試作）</title>
+<meta name="description" content="本站的授權條款、上游來源與作者、我方改動，以及如何取得完整來源檔。">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/sichuan.css">
+</head>
+<body data-page="license">
+
+<header class="site" id="nav"></header>
+
+<main class="wrap">
+
+  <h1>授權</h1>
+  <p class="lead">
+    本站的讀音資料衍生自他人的字典，因此本站的資料部分必須以<b>相同的授權</b>釋出。
+    這一頁把「哪些東西是誰的、用什麼條款、改了什麼、來源在哪」一次講清楚。
+  </p>
+
+  <h2>一　本站授權</h2>
+  <div class="card accent">
+    <p><b>本站（含衍生字表與網頁）依 GNU General Public License v3.0 釋出，不附任何擔保。</b></p>
+    <p class="muted">
+      授權全文：<a href="LICENSE.txt"><code>LICENSE.txt</code></a>
+      （亦見 <a href="data/upstream/LICENSE.md"><code>data/upstream/LICENSE.md</code></a>）。
+      你可以自由使用、修改、再散布，條件是衍生作品同樣以 GPL-3.0 釋出，並保留來源標示。
+    </p>
+  </div>
+
+  <h2>二　上游來源與作者</h2>
+  <p class="muted">
+    本站含三個語族、共 14 個方言點，<b>各點的來源與授權不同</b>，逐一列明如下。
+    三者皆經 <a href="https://github.com/laubonghaudoi/Chinese_Rime">laubonghaudoi/Chinese_Rime</a>
+    之 <code>download/</code> 取得；該倉庫為<b>打包者</b>，
+    其根目錄的 CC-BY-4.0 管的是「打包與索引」那層工作，各字典仍沿用上游自己的授權。
+  </p>
+  <table class="cmp">
+    <tr><th>語族</th><th>方言點</th><th>上游授權</th><th>來源檔</th></tr>
+    <tr><td class="ptname">普通話</td>
+        <td>普通話（基準線）</td>
+        <td><b>MIT</b><br><span class="muted"><code>mozillazg/pinyin-data</code></span></td>
+        <td><a href="data/upstream-cmn/">data/upstream-cmn/</a></td></tr>
+    <tr><td class="ptname" rowspan="6">四川話</td>
+        <td>通音、宜賓、自貢、成都、重慶、貴陽</td>
+        <td><b>GPL-3.0</b><br><span class="muted">作者 Ciphotis、涼風Papnas、旷_野、soenghaagong、holy19891004<br>
+        <a href="https://github.com/Papnas/shupin">Papnas/shupin</a></span></td>
+        <td><a href="data/upstream/">data/upstream/</a></td></tr>
+    <tr><td class="ptname" rowspan="2">吳語</td>
+        <td>上海話</td><td><b>CC0 1.0</b>（公眾領域貢獻）</td>
+        <td><a href="data/upstream-wu/">data/upstream-wu/</a></td></tr>
+    <tr><td>寧波話</td><td><b>GNU LGPL</b></td><td><a href="data/upstream-wu/">data/upstream-wu/</a></td></tr>
+    <tr><td class="ptname" rowspan="6">閩南語</td>
+        <td>潮州、汕頭、揭陽、潮陽、澄海、饒平</td>
+        <td><b>GPL-3.0</b><br><span class="muted">六份授權檔 md5 相同</span></td>
+        <td><a href="data/upstream-min/">data/upstream-min/</a></td></tr>
+  </table>
+  <p class="muted" style="margin-top:.6rem">
+    <b>客家話未納入。</b>高覆蓋的來源無授權檔，有授權的（大埔話 CC-BY-4.0）覆蓋率僅 40.6%，
+    依「來源必須有明確授權」之標準暫停。
+  </p>
+
+  <h2>三　我方做了什麼</h2>
+  <ol>
+    <li><b>格式轉換</b>：把字典的「字 → 讀音」轉為網站用的字表。</li>
+    <li><b>套用各方案的第一段音韻規則</b>（<code>xform</code>），依序執行。
+      <code>derive</code> 一律略過——那只是容許的輸入拼寫變體，不影響正讀。</li>
+    <li><b>選音</b>：以字譜所屬韻部的中古聲調為約束，在字典的多讀音中挑合乎規律的一條。</li>
+  </ol>
+  <p>
+    <b>我們沒有新增、修改或推翻任何一條讀音判斷。</b>
+    上游規則若自相衝突（例如宜賓方案的尖團規則次序問題），本站照原樣呈現，
+    並在<a href="duizhang.html">反切對帳</a>頁標明。
+  </p>
+
+  <h2>四　如何取得完整來源</h2>
+  <p>依 GPL-3.0，散布衍生資料時必須一併提供對應來源。本站提供的檔案：</p>
+  <div id="src-list"></div>
+  <p class="muted">
+    另可自上游 <a href="https://github.com/Papnas/shupin">Papnas/shupin</a> 取得原始版本。
+    本站所用的字典與上游<b>逐位元組相同</b>（<code>shupin.dict.yaml</code>，454,078 位元組），
+    未作任何修改。
+  </p>
+
+  <h2>五　各元件授權一覽</h2>
+  <div id="part-list"></div>
+
+  <h2>六　無擔保</h2>
+  <p class="muted">
+    本程式／資料係「按現狀」提供，不附任何明示或默示之擔保，包括但不限於
+    可商用性與特定用途適用性之擔保。讀音為按規則推得之結果，<b>未經逐字田野核對</b>，
+    不應作為某地實際讀音的依據。
+  </p>
+
+</main>
+
+<footer class="site" id="foot"></footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/chars.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

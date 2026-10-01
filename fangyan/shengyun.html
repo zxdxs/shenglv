@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>聲韻入門 —— 聲律發蒙 · 方言導讀（試作）</title>
+<meta name="description" content="四川話、吳語、閩南語的聲韻入門：怎麼看本站標音，以及同一個中古入聲在三個語族裡的三種命運。">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/sichuan.css">
+</head>
+<body data-page="shengyun">
+
+<header class="site" id="nav"></header>
+
+<main class="wrap">
+
+  <h1>聲韻入門</h1>
+  <p class="lead">
+    這一頁講兩件事：<b>怎麼看懂本站的標音</b>，以及<b>同一個中古入聲，怎麼從普通話一路走到閩南語</b>。
+    用頁首的「語族」下拉切換。
+  </p>
+
+  <div class="card accent">
+    <p>
+      <b>一句話版本：</b>閩南語把入聲的塞音尾留住了（-p／-k／-h）；吳語只剩一個喉塞（-h／-q）；
+      四川話連尾巴都掉了，只能靠<b>聲調</b>辨認；<b>普通話則連調類都沒了</b>，散入四聲，只能死記。
+    </p>
+  </div>
+
+  <!-- ───────────────────────── 普通話（基準線） ───────────────────────── -->
+  <section data-fam="cmn">
+    <h2>普通話（基準線）</h2>
+    <p class="lead">
+      普通話不是「又一支方言」，而是整組對照的<b>基準線</b>——它是中古入聲的最終下場：
+      <b>塞音尾沒了，調類也沒了</b>。同一個入聲字，在普通話裡可能讀成任何一個調。
+    </p>
+
+    <h3>入聲去哪了：散入四聲</h3>
+    <p class="muted">
+      中古入聲字本是一類。到了普通話，它們散進四個聲調裡——下表為本站資料對
+      《聲律發蒙》全書入聲字的實測。
+      <b>這就是《聲律發蒙》要孩子「背」的原因</b>：規則沒有消失，只是從聲音退回了書本。
+    </p>
+    <div id="cmn-dist"></div>
+
+    <h3>看幾個字</h3>
+    <p class="muted">
+      同是入聲，普通話讀法各異——去聲、陽平、上聲都有，看不出共同點。
+      切到粵語／閩南語，它們卻整齊地收在同一個韻尾上。
+    </p>
+    <div id="cmn-ru"></div>
+  </section>
+
+  <!-- ───────────────────────── 四川話 ───────────────────────── -->
+  <section data-fam="sichuan">
+    <h2>四川話</h2>
+    <p class="lead">
+      本站四川話用<b>蜀拼通音</b>拼音：拉丁字母寫聲母韻母，末尾數字是聲調。
+      與漢語拼音同源，但<b>聲調有 5 個</b>——第 5 聲就是入聲。
+    </p>
+
+    <h3>聲母：三個分岔</h3>
+    <ul>
+      <li><b>翹舌音（zh／ch／sh）</b>：成都、重慶、貴陽、宜賓讀成平舌；<b>自貢保留翹舌</b>。</li>
+      <li><b>泥來（n／l）</b>：宜賓、重慶、貴陽<b>泥母讀 l</b>（年＝lian）；成都、自貢仍讀 n。</li>
+      <li><b>尖團</b>：各點皆合併（擠 ji1、妻 qi1、西 xi1）；宜賓有一批例外，見<a href="duizhang.html">反切對帳</a>。</li>
+    </ul>
+    <div id="sc-zh"></div>
+
+    <h3>入聲：三種去向</h3>
+    <p class="muted">塞音尾全失，只能靠調辨認；而不同片區歸進不同的調。</p>
+    <div id="sc-tone"></div>
+    <div id="sc-ru"></div>
+  </section>
+
+  <!-- ───────────────────────── 吳語 ───────────────────────── -->
+  <section data-fam="wu">
+    <h2>吳語</h2>
+    <p class="lead">
+      吳語屬<b>詞調型（pitch-accent）方言</b>：一個字的調取決於它在詞裡的位置，
+      單字調本就難以獨立標注。因此<b>本站吳語不標聲調</b>——這不是資料缺失，是方言的性質。
+    </p>
+
+    <h3>聲母：全濁音還在</h3>
+    <p class="muted">
+      普通話「清化」了中古的全濁聲母（並、定都讀成清音），
+      <b>吳語把它們留住了</b>——b／d／g／v／z 仍是濁音。這是吳語最鮮明的特徵。
+    </p>
+    <div id="wu-voiced"></div>
+
+    <h3>入聲：只剩一個喉塞</h3>
+    <p class="muted">
+      中古的 -p／-t／-k 三個塞音尾，在吳語併成<b>一個喉塞尾</b>。
+      寫法兩地不同：<b>上海用 -h，寧波用 -q</b>——同一個音，兩套拼法。
+    </p>
+    <div id="wu-ru"></div>
+
+    <h3>兩點差異</h3>
+    <p class="muted">
+      上海話與寧波話同屬太湖片，但聲母差得不小：寧波<b>泥來相混</b>（泥＝gni、來＝ne），
+      上海分得清（nyi／le）；寧波還多一套 <b>gn-</b> 鼻音聲母。
+    </p>
+    <div id="wu-diff"></div>
+  </section>
+
+  <!-- ───────────────────────── 閩南語 ───────────────────────── -->
+  <section data-fam="min">
+    <h2>閩南語（潮汕片）</h2>
+    <p class="lead">
+      本站閩南語是<b>潮汕片</b>六個點。標音末尾的數字是<b>聲調</b>（1–8），
+      入聲分<b>陰入（4）</b>與<b>陽入（8）</b>兩類。
+    </p>
+
+    <h3>入聲：塞音尾留住了——但「三個」不是「四個」</h3>
+    <p class="muted">
+      常說閩南語保留 -p／-t／-k／-h 四種入聲尾。但<b>潮汕片沒有 -t</b>——
+      中古的 -t 已併進 -k 或 -h。本站資料實測：入聲字中 -p 尾 116 字、<b>-t 尾 0 字</b>、
+      -k 尾 653 字、-h 尾 192 字。要看 -t，得去廈門、泉州、臺灣閩南語。
+    </p>
+    <div id="min-ru"></div>
+
+    <h3>鼻音聲母</h3>
+    <p class="muted">
+      閩南語的 ng-／gh- 來自中古疑母，普通話多半丟了聲母（我＝wǒ、五＝wǔ、牙＝yá）。
+      本站閩南語讀音裡，ng／gh 是獨立的一組聲母。
+    </p>
+    <div id="min-nasal"></div>
+
+    <h3>六點差異</h3>
+    <p class="muted">
+      潮汕六點彼此差得不小——本站資料中有 <b>1,661 字</b>讀音不同。
+      大致上潮州與澄海一組、汕頭與饒平一組，揭陽另有自己的走法；
+      連入聲尾都有分歧（法：潮州 huap4、汕頭 huak4）。
+    </p>
+    <div id="min-diff"></div>
+  </section>
+
+  <h2>怎麼用本站</h2>
+  <ul>
+    <li>頁首<b>語族</b>下拉切換語族；<b>方言點</b>下拉切換點，或選「本語族全部並列」。</li>
+    <li><a href="quanben.html">全本 106 韻</a>：逐韻瀏覽，含劉節原本字譜與反切。</li>
+    <li><a href="duizhang.html">反切對帳</a>：看每個字的反切怎麼落到今天的讀音（四川話頁）。</li>
+    <li><a href="license.html">授權</a>：各語族來源與授權不同，逐一列明。</li>
+  </ul>
+
+  <div class="card accent">
+    <p>
+      <b>一句提醒：</b>本站讀音取自公開字典與各地方案規則，<b>不是我們去當地錄的</b>。
+      足以用來看「音類怎麼分家」，但不足以當作某地實際讀音的依據。
+    </p>
+  </div>
+
+</main>
+
+<footer class="site" id="foot"></footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/chars.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
