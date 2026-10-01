@@ -1,4 +1,4 @@
-/* 四川話 · 聲律發蒙（試作）前端
+/* 聲律發蒙 · 方言導讀（試作）前端
  *
  * 資料形狀（由 build_sichuan_site.py 產生）：
  *   window.SHENGLV          meta ＋ points[] ＋ volumes[{id,name,tone,rhymes[{name,lineCount}]}]
@@ -86,7 +86,7 @@ function buildHeader() {
   var wrap = el('div', 'wrap');
   var brand = el('a', 'brand');
   brand.href = 'index.html';
-  brand.appendChild(document.createTextNode('四川話 · 聲律發蒙'));
+  brand.appendChild(document.createTextNode('聲律發蒙 · 方言導讀'));
   brand.appendChild(el('small', null, '集各地各派吟誦，傳中文千古聲韻'));
   wrap.appendChild(brand);
   var nav = el('nav', 'main');
@@ -215,7 +215,8 @@ function buildFooter() {
     cols.appendChild(d);
   }
   col('本站', [
-    { text: '《聲律發蒙》全本 ' + (M.meta.rhymeCount || 0) + ' 韻 · 四川話導讀' },
+    { text: '《聲律發蒙》全本 ' + (M.meta.rhymeCount || 0) + ' 韻 · '
+            + families().length + ' 語族 ' + allPoints().length + ' 個方言點導讀' },
     { text: '試作版 ' + (M.meta.version || ''), cls: 'muted' }
   ]);
   col('文本來源', [{ text: M.meta.source || '' }, { text: '正文屬公有領域', cls: 'muted' }]);
