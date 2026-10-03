@@ -72,7 +72,54 @@
     </p>
   </div>
 
-  <h2>四　方法</h2>
+  <h2 id="license">四　方言讀音資料與授權</h2>
+  <div class="card">
+    <p>
+      除粵語外，本站另收 <b>4 個語族 15 個方言點</b>的逐字讀音（見
+      〈<a href="quanben.html">全本</a>〉的方言切換器）。這些讀音<b>各有來源、各有授權</b>，
+      與粵語那份不同，故逐一列明。
+    </p>
+    <div class="cmpwrap">
+      <table class="cmp">
+        <tr><th>語族</th><th>方言點</th><th>來源</th><th>授權</th></tr>
+        <tr><td class="ptname">粵語</td><td>粵語</td>
+            <td>rime-cantonese</td><td>CC-BY-4.0 ＋ ODbL</td></tr>
+        <tr><td class="ptname">普通話</td><td>普通話</td>
+            <td>mozillazg/pinyin-data</td><td>MIT</td></tr>
+        <tr><td class="ptname">四川話</td><td>通音 · 宜賓 · 自貢 · 成都 · 重慶 · 貴陽</td>
+            <td>蜀拼通音字典（Papnas/shupin）＋ 各點 Rime 方案規則</td><td>GPL-3.0</td></tr>
+        <tr><td class="ptname">吳語</td><td>上海話</td>
+            <td>rime-shanghainese</td><td>CC0 1.0</td></tr>
+        <tr><td class="ptname">吳語</td><td>寧波話</td>
+            <td>rime-ningbo</td><td>LGPL</td></tr>
+        <tr><td class="ptname">閩南語</td><td>潮州 · 汕頭 · 揭陽 · 潮陽 · 澄海 · 饒平</td>
+            <td>潮汕話 Rime 方案</td><td>GPL-3.0</td></tr>
+      </table>
+    </div>
+    <p>
+      <b>GPL-3.0 的對應來源已隨站附上</b>——本站所散布的字典檔與方案檔置於
+      <a href="data/upstream/"><code>data/upstream/</code></a>、<a href="data/upstream-cmn/"><code>data/upstream-cmn/</code></a>、
+      <a href="data/upstream-wu/"><code>data/upstream-wu/</code></a>、<a href="data/upstream-min/"><code>data/upstream-min/</code></a>，
+      授權全文見 <code>data/LICENSE-GPL-3.0.txt</code> 及各目錄內的 <code>LICENSE</code>。
+      這是 GPL-3.0 的要求，不是可選項。
+    </p>
+    <p class="muted">
+      中古聲母與清濁的分類依據 <a href="https://github.com/nk2028/tshet-uinh-data" rel="noopener">nk2028/tshet-uinh-data</a>
+      （CC0 1.0）；原站另附 <a href="data/upstream-qieyun/"><code>data/upstream-qieyun/</code></a>。
+    </p>
+    <p>
+      <b>客家話尚未收錄。</b>覆蓋率較高的幾份公開資料未標明授權，
+      未取得明確授權前我們不散布——寧缺勿濫。目前只有覆蓋約 40% 的大埔話可用，
+      不足以支撐全書，故暫緩。
+    </p>
+    <p class="muted">
+      四川話各點的字音由<b>同一份通音字典 ＋ 各點方案規則</b>推得，故「通音」是基準點，
+      其餘五點是同一基準在不同片區規則下的結果。這與閩南語、吳語「各點各有一份字典」
+      的作法不同，比較時請留意。
+    </p>
+  </div>
+
+  <h2>五　方法</h2>
   <div class="card">
     <p><b>四行對齊。</b>粵拼在上、普通話拼音次之（僅作對照）、原文居中、吟誦符號在下。</p>
     <p><b>入聲標示。</b>粵語以 -p／-t／-k 收尾者為入聲，褐色加底線。</p>
@@ -83,7 +130,7 @@
       按「聲母集合 × 韻母集合」匹配</b>，不取單一讀音。不吻合者全部列出，不隱藏。</p>
   </div>
 
-  <h2>五　規模與覆蓋</h2>
+  <h2>六　規模與覆蓋</h2>
   <div class="stats" id="aboutStats"></div>
   <p class="muted">
     以上為底本與粵語示範層的規模。真人吟誦（聲音證據）層以
@@ -92,7 +139,7 @@
     方言點級隨時補充；各支方言的進度見〈<a href="fengong.html#fy">歸集進度·方言視圖</a>〉。
   </p>
 
-  <h2>六　待考字（不自造讀音）</h2>
+  <h2>七　待考字（不自造讀音）</h2>
   <div class="card">
     <p>
       有一類字，字典未收、且多屬 Unicode 擴展 B 區的罕用字，現代粵音無從查考。
@@ -110,7 +157,7 @@
     </p>
   </div>
 
-  <h2>七　外掛字音表</h2>
+  <h2>八　外掛字音表</h2>
   <div class="card">
     <p>rime-cantonese 未收之字，逐字附依據：</p>
     <div id="variants"></div>
@@ -124,20 +171,20 @@
     </ul>
   </div>
 
-  <h2>八　已知限制</h2>
+  <h2>九　已知限制</h2>
   <div class="card">
     <ul>
       <li><b>多音字約三成七。</b>選音依反切，但反切未必覆蓋全部用例，仍有誤判可能。</li>
       <li><b>反切對帳未達全吻合。</b>中古到粵語的聲母演變規則尚未完全建模
         （全濁清化、云母演變、韻攝分化等），不吻合處即待查清單。</li>
-      <li><b>字譜罕用字待考。</b>見第六節；這些字不參與對帳統計。</li>
+      <li><b>字譜罕用字待考。</b>見第七節；這些字不參與對帳統計。</li>
       <li><b>語料混入簡體字。</b>原文本應為繁體，實測發現二十餘處，已另行標注。</li>
       <li><b>音頻為機器合成。</b>節奏與吟誦處理不等同人聲。</li>
       <li><b>非校勘定本。</b>本站為導讀與工具，不宣稱版本權威性。</li>
     </ul>
   </div>
 
-  <h2>九　回報</h2>
+  <h2>十　回報</h2>
   <div class="card">
     <p>讀音有誤、反切判讀有疑義、或發現更多混入的簡體字形，都歡迎指出——
       這一頁的「待查清單」與「待考字」本來就是開放的工作清單。</p>

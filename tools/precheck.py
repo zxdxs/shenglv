@@ -32,7 +32,7 @@ _site_sub = os.path.join(HERE, 'site')
 SITE = _site_sub if os.path.isdir(_site_sub) else os.path.dirname(HERE)
 ASSETS = os.path.join(SITE, 'assets')
 PAGES = ['index.html', 'weihe.html', 'fengong.html', 'canyu.html', 'wip.html', 'quanben.html',
-         'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', '404.html']
+         'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', 'shengyun.html', '404.html']
 
 fails, warns, checks = [], [], []
 

@@ -3,29 +3,58 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>聲韻入門 —— 聲律發蒙 · 方言導讀（試作）</title>
-<meta name="description" content="四川話、吳語、閩南語的聲韻入門：怎麼看本站標音，以及同一個中古入聲在三個語族裡的三種命運。">
+<title>聲韻入門 —— 中文聲韻</title>
+<meta name="description" content="中古入聲在粵語、普通話、四川話、吳語、閩南語裡的分家：怎麼看本站的標音，以及同一個入聲字為什麼走散。">
 <link rel="stylesheet" href="assets/style.css">
-<link rel="stylesheet" href="assets/sichuan.css">
 </head>
-<body data-page="shengyun">
+<body data-page="shengyun.html">
 
 <header class="site" id="nav"></header>
 
-<main class="wrap">
+<main class="wrap shengyun">
 
   <h1>聲韻入門</h1>
   <p class="lead">
-    這一頁講兩件事：<b>怎麼看懂本站的標音</b>，以及<b>同一個中古入聲，怎麼從普通話一路走到閩南語</b>。
-    用頁首的「語族」下拉切換。
+    這一頁講兩件事：<b>怎麼看懂本站的標音</b>，以及<b>同一個中古入聲，怎麼從粵語一路走散到普通話</b>。
+    要看逐字對照，去〈<a href="quanben.html">全本 106 韻</a>〉用頁面上的方言切換器選點。
   </p>
 
   <div class="card accent">
     <p>
-      <b>一句話版本：</b>閩南語把入聲的塞音尾留住了（-p／-k／-h）；吳語只剩一個喉塞（-h／-q）；
+      <b>一句話版本：</b>粵語把入聲完整留住（-p／-t／-k）；閩南語也留住了塞音尾，但潮汕片沒有 -t
+      （只剩 -p／-k／-h）；吳語只剩一個喉塞（-h／-q）；
       四川話連尾巴都掉了，只能靠<b>聲調</b>辨認；<b>普通話則連調類都沒了</b>，散入四聲，只能死記。
     </p>
   </div>
+
+  <div class="card">
+    <p class="muted" style="margin:0">
+      <b>本站不做什麼：</b>讀音取自公開字典與各地方案規則，<b>不是我們去當地錄的</b>。
+      足以用來看「音類怎麼分家」，但不足以當作某地實際讀音的依據。
+      各語族來源與授權不同，見〈<a href="about.html#license">關於本站</a>〉。
+    </p>
+  </div>
+
+  <!-- ───────────────────────── 粵語（主線） ───────────────────────── -->
+  <section data-fam="yue">
+    <h2>粵語（本站主線）</h2>
+    <p class="lead">
+      粵語是中古入聲<b>保留得最完整</b>的一支：-p／-t／-k 三個塞音尾俱全，
+      而且與中古的對應相當整齊。本站粵語用<b>粵拼（Jyutping）</b>標音，
+      入聲字以 <b>1／3／6</b> 三個調收尾，且入聲調與塞音尾嚴格配套。
+    </p>
+    <h3>入聲韻尾與聲調</h3>
+    <p class="muted">
+      粵語的入聲不是「散入」四聲，而是自成一套：<b>上陰入（1）</b>、<b>下陰入（3）</b>、<b>陽入（6）</b>。
+      全書 1,305 個入聲字全數落在這三調內——沒有例外。
+    </p>
+    <div id="yue-ru"></div>
+    <h3>看幾個字</h3>
+    <p class="muted">
+      這幾個字在粵語裡都收在塞音尾上。切到其他方言點看同一批字怎麼變。
+    </p>
+    <div id="yue-cmp"></div>
+  </section>
 
   <!-- ───────────────────────── 普通話（基準線） ───────────────────────── -->
   <section data-fam="cmn">
@@ -79,7 +108,7 @@
 
     <h3>看幾個字</h3>
     <p class="muted">
-      同是入聲，普通話讀法各異。切到粵語／閩南語，它們卻整齊地收在同一個韻尾上——
+      同是入聲，普通話讀法各異。看左邊一欄的粵語，它們卻整齊地收在塞音尾上——
       規則仍留在聲音裡。
     </p>
     <div id="cmn-ru"></div>
@@ -97,7 +126,7 @@
     <ul>
       <li><b>翹舌音（zh／ch／sh）</b>：成都、重慶、貴陽、宜賓讀成平舌；<b>自貢保留翹舌</b>。</li>
       <li><b>泥來（n／l）</b>：宜賓、重慶、貴陽<b>泥母讀 l</b>（年＝lian）；成都、自貢仍讀 n。</li>
-      <li><b>尖團</b>：各點皆合併（擠 ji1、妻 qi1、西 xi1）；宜賓有一批例外，見<a href="duizhang.html">反切對帳</a>。</li>
+      <li><b>尖團</b>：各點皆合併（擠 ji1、妻 qi1、西 xi1）；宜賓有一批例外，見〈<a href="duizhang.html">反切對帳</a>〉。</li>
     </ul>
     <div id="sc-zh"></div>
 
@@ -171,16 +200,18 @@
 
   <h2>怎麼用本站</h2>
   <ul>
-    <li>頁首<b>語族</b>下拉切換語族；<b>方言點</b>下拉切換點，或選「本語族全部並列」。</li>
-    <li><a href="quanben.html">全本 106 韻</a>：逐韻瀏覽，含劉節原本字譜與反切。</li>
-    <li><a href="duizhang.html">反切對帳</a>：看每個字的反切怎麼落到今天的讀音（四川話頁）。</li>
-    <li><a href="license.html">授權</a>：各語族來源與授權不同，逐一列明。</li>
+    <li>〈<a href="quanben.html">全本 106 韻</a>〉頁面上有<b>兩級切換器</b>：先選語族，再選方言點；
+      切換後全書字音隨之改變，不動頁面。</li>
+    <li>游標停在任一字上，可看該字在<b>當前方言點</b>的讀音、是否中古入聲、以及該點的入聲韻尾實況。</li>
+    <li>〈<a href="duizhang.html">反切對帳</a>〉：看每個字的反切怎麼落到今天的粵語讀音。</li>
+    <li>〈<a href="about.html#license">關於本站</a>〉：各語族來源與授權不同，逐一列明。</li>
   </ul>
 
   <div class="card accent">
     <p>
       <b>一句提醒：</b>本站讀音取自公開字典與各地方案規則，<b>不是我們去當地錄的</b>。
       足以用來看「音類怎麼分家」，但不足以當作某地實際讀音的依據。
+      潮汕各點覆蓋率約 72%，未收之字顯示「—」，我們不以推測值填空。
     </p>
   </div>
 
@@ -190,6 +221,8 @@
 
 <script src="assets/data.js"></script>
 <script src="assets/chars.js"></script>
+<script src="assets/fangyan-meta.js"></script>
+<script src="assets/fangyan.js"></script>
 <script src="assets/app.js"></script>
 </body>
 </html>

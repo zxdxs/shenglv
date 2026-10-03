@@ -319,3 +319,49 @@ table.fg tr.blank td { background: #fffdf6; }
 tr.blank td.seq { color: var(--pin); }
 
 .legend-line { font-size: .82rem; color: var(--pin); display: flex; gap: .2rem 1rem; flex-wrap: wrap; margin: .5rem 0; }
+
+/* ---------- 方言切換器（原 /fangyan/ 併入） ---------- */
+.ptbar { margin: .2rem 0 1.2rem; padding: .7rem .9rem; background: var(--paper-2);
+         border: 1px solid var(--line); border-radius: 4px; }
+.ptrow { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; }
+.ptrow + .ptrow { margin-top: .45rem; }
+.ptlabel { font-size: .8rem; color: var(--pin); letter-spacing: .1em;
+           flex: 0 0 3.4rem; }
+.ptbar button {
+  font: inherit; font-size: .86rem; padding: .25rem .62rem; cursor: pointer;
+  background: var(--paper); color: var(--ink-soft);
+  border: 1px solid var(--line); border-radius: 3px; letter-spacing: .04em;
+}
+.ptbar button:hover { border-color: var(--ink-soft); }
+.ptbar button.on { background: var(--accent); color: #fff; border-color: var(--accent);
+                   font-weight: 700; }
+.ptnote { font-size: .78rem; color: var(--pin); margin: .5rem 0 0; line-height: 1.5; }
+/* 非粵語方言點沒有音檔：留位但做成明顯不可按，免得讀者以為壞了 */
+.pbtn.off { color: var(--line); cursor: default; background: none; border: none; }
+@media (max-width: 640px) {
+  .ptlabel { flex: 0 0 100%; }
+}
+
+/* ---------- 對照表（聲韻入門用；原 fangyan/sichuan.css 併入） ---------- */
+.cmp { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.cmp th, .cmp td { border: 1px solid var(--line); padding: .22rem .3rem; text-align: center; }
+.cmp th { background: var(--paper-2); font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
+.cmp td.zi { font-size: 1.25rem; background: var(--paper); }
+.cmp td.ru { color: var(--ru); }
+.cmp .ptname { text-align: left; white-space: nowrap; color: var(--ink-soft); }
+.cmpwrap { overflow-x: auto; margin: .5rem 0 1rem; }
+/* 聲韻入門：各語族段落；合併後不再用分頁隱藏，全部展開 */
+.shengyun section { margin: 1.6rem 0 2.2rem; padding-top: .4rem; border-top: 1px solid var(--line); }
+.shengyun section > h2 { margin-top: .6rem; }
+
+/* ---------- 首頁方言索引 ---------- */
+.fampoints { margin: .6rem 0 1rem; }
+.famrow2 { display: flex; flex-wrap: wrap; gap: .4rem; align-items: baseline;
+           padding: .35rem 0; border-bottom: 1px dotted var(--line); }
+.famname { flex: 0 0 5rem; font-size: .84rem; color: var(--pin); letter-spacing: .08em; }
+.chips { display: flex; flex-wrap: wrap; gap: .3rem; }
+.ptlink { font-size: .86rem; padding: .18rem .55rem; border: 1px solid var(--line);
+          border-radius: 3px; background: var(--paper-2); color: var(--ink-soft);
+          text-decoration: none; }
+.ptlink:hover { border-color: var(--ink-soft); color: var(--ink); }
+.ptlink.on { border-color: var(--accent); color: var(--accent); font-weight: 700; }
