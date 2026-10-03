@@ -152,13 +152,39 @@ def main():
         ok('④ 資料檔', f"data.js meta；chars.js {len(CH)} 字；duizhang.js {len(DZ)} 條反切")
 
     # ---------- ⑤ 連結 ----------
+    # ★ 先去掉 HTML 註解再抽 id 與連結。否則註解裡提到的 id／href 會混進來：
+    #   實測時我在 fengong.html 的註解寫了「id="fy" 是對外錨點」，
+    #   於是就算把真正的 id="fy" 拿掉，錨點檢查仍會誤判為通過——
+    #   閘門被自己的說明文字騙過去了。
+    def strip_comments(h):
+        return re.sub(r'<!--.*?-->', '', h, flags=re.S)
+
     links, dead_links = 0, []
+    page_ids = {}
     for p in PAGES:
-        html = open(os.path.join(SITE, p), encoding='utf-8').read()
-        for m in re.finditer(r'href="([^"#:]+\.html)"', html):
+        page_ids[p] = set(re.findall(
+            r'id="([^"]+)"',
+            strip_comments(open(os.path.join(SITE, p), encoding='utf-8').read())))
+    for p in PAGES:
+        # ★ 404.html 用絕對路徑是**正確的**：它可能在任意深度被服務，
+        #   相對路徑在那裡反而會斷。故不把它的 /xxx 當死鏈。
+        if p == '404.html':
+            continue
+        html = strip_comments(open(os.path.join(SITE, p), encoding='utf-8').read())
+        for m in re.finditer(r'href="([^"]+)"', html):
+            u = m.group(1)
+            if u.startswith(('http', 'mailto:', '#')):
+                continue
             links += 1
-            if not os.path.exists(os.path.join(SITE, m.group(1).lstrip('/'))):
-                dead_links.append(f'{p} → {m.group(1)}')
+            fn, _, frag = u.partition('#')
+            if fn and not os.path.exists(os.path.join(SITE, fn.lstrip('/'))):
+                dead_links.append(f'{p} → {u}（檔案不存在）')
+                continue
+            # ★ 錨點也要驗。先前只驗檔存在，於是 fengong.html#fy 這種
+            #   「檔案在、錨點不在」的死鏈四頁齊發卻一路綠燈。
+            tgt = fn.lstrip('/') or p
+            if frag and tgt in page_ids and frag not in page_ids[tgt]:
+                dead_links.append(f'{p} → {u}（錨點 {frag} 不存在於 {tgt}）')
 
     # sitemap：不只要「loc 可達」，還要結構正確、且涵蓋每一頁。
     # ★ 舊檢查只用正則抽 <loc> 再驗檔存在，因而漏掉兩種真缺陷：

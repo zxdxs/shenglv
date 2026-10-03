@@ -34,9 +34,15 @@
     </p>
   </div>
 
-  <div class="viewtabs" id="fgViews">
-    <button type="button" id="fgViewListBtn" aria-pressed="true">篇目</button>
-    <button type="button" id="fgViewDiaBtn" aria-pressed="false">方言</button>
+  <!-- id="fy" 是對外錨點：about / contribute / weihe / wip 四頁都連到
+       〈歸集進度·方言視圖〉。app.js 本來就會依 #fy 切到方言視圖，
+       但先前**沒有任何元素帶這個 id**，所以點進去只切換、不會捲到該處。
+       錨點放在外層 div、維持內層 #fgViews 的樣式與 app.js 的既有選取器不變。 -->
+  <div class="viewtabs" id="fy">
+    <span id="fgViews">
+      <button type="button" id="fgViewListBtn" aria-pressed="true">篇目</button>
+      <button type="button" id="fgViewDiaBtn" aria-pressed="false">方言</button>
+    </span>
   </div>
 
   <section id="fgViewList">
