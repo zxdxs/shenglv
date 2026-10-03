@@ -399,7 +399,10 @@
     { href: 'quanben.html', label: '方言', children: [
       // ★ 方言點已併入本站，不再外連 /fangyan/。
       //   這些連結指向本站全本頁並帶 ?pt=，由前端切到該點。
-      // ★ 普通話排首位（業主指示）：它是整組對照的基準線。
+      // ★ 聲韻入門排最前（業主指示）：它是入口，不是方言點。
+      //   先讀怎麼看標音，再挑方言——順序上就該在方言之前。
+      { label: '聲韻入門', href: 'shengyun.html', on: true },
+      // ★ 其餘為方言點，順序與語族排列一致（普通話→粵語→四川話→吳語→閩南語）。
       //   注意順序與預設是兩件事——預設選中的點仍是粵語（見 PT 預設值），
       //   因粵語有逐字粵拼與全書音檔，是本站主線視圖。
       { label: '普通話', href: 'quanben.html?pt=putonghua', on: true },
@@ -407,7 +410,6 @@
       { label: '四川話', href: 'quanben.html?pt=tongyin', on: true },
       { label: '吳語', href: 'quanben.html?pt=shanghai', on: true },
       { label: '閩南語', href: 'quanben.html?pt=chaozhou', on: true },
-      { label: '聲韻入門', href: 'shengyun.html', on: true },
       { label: '客家話', href: 'wip.html' },
       // 「＋ 添加」改指提供錄音：文本層已由維護者統一整理，
       // 現在要讓一支方言落地，走的是錄音而非提交文本。

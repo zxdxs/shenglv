@@ -430,15 +430,21 @@ const problems = [];
       fail++; problems.push(`${page}：渲染拋出例外 → ${err.message}`);
     } else {
       const got = collectClass(registry['famGrid'], 'famname');
-      const navGot = collectClass(registry['nav'], 'dia-chip').slice(0, want.length);
+      // ★ 只比對「方言點」的 chip。導覽下拉裡還有非方言項（聲韻入門、客家話、
+      //   ＋ 添加方言），它們的位置不該受語族順序約束——聲韻入門就被移到最前。
+      //   用「標籤是否為語族名」篩，再比對數量，避免改名或漏項被靜默略過。
+      const navGot = collectClass(registry['nav'], 'dia-chip').filter(t => want.indexOf(t) >= 0);
       const same = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
-      if (same(got, want) && same(navGot, want)) {
+      const missDialect = want.filter(w => navGot.indexOf(w) < 0);
+      if (same(got, want) && same(navGot, want) && !missDialect.length) {
         pass++;
-        console.log(`✓ ${page.padEnd(15)} 首頁索引與導覽下拉皆為 ${want.join('→')}`);
+        console.log(`✓ ${page.padEnd(15)} 首頁索引與導覽下拉的方言項皆為 ${want.join('→')}`);
       } else {
         fail++;
         problems.push(`${page}：順序與產線不一致 → 期望 ${want.join('→')}；` +
-                      `首頁索引 ${got.join('→') || '(空)'}；導覽下拉 ${navGot.join('→') || '(空)'}`);
+                      `首頁索引 ${got.join('→') || '(空)'}；` +
+                      `導覽下拉方言項 ${navGot.join('→') || '(空)'}` +
+                      (missDialect.length ? `；導覽缺 ${missDialect.join('、')}` : ''));
       }
     }
   }
