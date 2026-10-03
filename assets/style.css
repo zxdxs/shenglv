@@ -189,7 +189,12 @@ td.r { font-family: "Menlo", "Consolas", monospace; color: var(--jyut); white-sp
 footer.site { border-top: 1px solid var(--line); background: var(--paper-2); padding: 1.4rem 0 2rem; font-size: .84rem; color: var(--pin); }
 footer.site .cols { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
 footer.site b { color: var(--ink-soft); font-weight: 700; }
-footer.site a { color: var(--ink-soft); }
+/* ★ 頁尾連結原本寫成 color: var(--ink-soft)，與頁尾正文同色、又沒有底線，
+   於是「關於與授權 →」「解決問題訓練站 →」看起來只是普通文字——
+   業主因此以為關於與授權在站上沒有連結。全站連結色是 var(--jyut)，
+   這裡沿用，別再壓成正文色。 */
+footer.site a { color: var(--jyut); }
+footer.site a:hover { text-decoration: underline; }
 
 .note { border-left: 3px solid var(--line); padding-left: .8rem; color: var(--ink-soft); font-size: .9rem; }
 
