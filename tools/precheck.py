@@ -330,11 +330,26 @@ def main():
         ('待考字數已揭露', 'pendingZupu' in idx and M.get('pendingZupu', 0) > 0),
         ('對帳率非零', M.get('dzToneRate', 0) > 0),
     ]
+    # ★ 文本標注通道已撤（業主指示：文本由維護者統一整理，不對外徵集）。
+    #   三處必須一致：共建頁不得再列該通道、榮譽榜不得再有該類、honor.js 不得再有 text。
+    #   只改一處就會出現「頁面說可以提交、但沒有入口」或「榜上有類別、卻永遠是空的」。
+    canyu = open(os.path.join(SITE, 'canyu.html'), encoding='utf-8').read()
+    rongyu = open(os.path.join(SITE, 'rongyu.html'), encoding='utf-8').read()
+    honor = open(os.path.join(ASSETS, 'honor.js'), encoding='utf-8').read()
+    claims += [
+        # 用「文本」二字而非「提供文本」：先前寫死四字，把「<b>文本</b>：…」
+        # 這種換了措辭的加回方式放行了——閘門被自己的字面假設騙過。
+        ('共建頁未列文本通道', '文本' not in canyu),
+        ('榮譽榜未列「文本標注」類', '文本標注' not in rongyu),
+        ('honor.js 已無 text 類別', re.search(r'\btext\s*:', honor) is None),
+        ('tigong.html 已無提交表單', '<form' not in
+            open(os.path.join(SITE, 'tigong.html'), encoding='utf-8').read()),
+    ]
     bad_claims = [c for c, v in claims if not v]
     if bad_claims:
         bad('⑥ 宣稱一致', f'{bad_claims}')
     else:
-        ok('⑥ 宣稱一致', f'{len(claims)} 項宣稱與資料相符（含「字譜字」與「全部字」不得混用）')
+        ok('⑥ 宣稱一致', f'{len(claims)} 項宣稱與資料相符（含「字譜字」不得混用、文本通道已撤的三處一致）')
 
     # ---------- ⑦ 音頻完整性 ----------
     audio_root = os.path.join(SITE, 'audio')

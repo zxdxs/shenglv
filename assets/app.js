@@ -409,7 +409,9 @@
       { label: '閩南語', href: 'quanben.html?pt=chaozhou', on: true },
       { label: '聲韻入門', href: 'shengyun.html', on: true },
       { label: '客家話', href: 'wip.html' },
-      { label: '＋ 添加', href: 'tigong.html', add: true }
+      // 「＋ 添加」改指提供錄音：文本層已由維護者統一整理，
+      // 現在要讓一支方言落地，走的是錄音而非提交文本。
+      { label: '＋ 添加方言', href: 'contribute.html', add: true }
     ]}
   ];
 
@@ -1554,9 +1556,8 @@
     var g = $('#canyuGrid');
     if (!g) return;
     [['contribute.html', '提供錄音', '以吟誦學會為單位認領，手機錄音即可；著作權歸吟誦者'],
-     ['tigong.html', '提供文本', '其他方言的字音標注，填表一鍵寄給維護者——純靜態，不上傳'],
      ['jiucuo.html', '糾錯', '全本文字、反切、粵拼、入聲標記——每一條採納都記入榮譽榜'],
-     ['rongyu.html', '榮譽榜', '吟誦、文本標注、糾錯三類貢獻者——空著的榜，本身就是邀請']
+     ['rongyu.html', '榮譽榜', '吟誦與糾錯兩類貢獻者——空著的榜，本身就是邀請']
     ].forEach(function (p) {
       var a = el('a', 'card card-link');
       a.href = p[0];
@@ -1573,7 +1574,7 @@
     var recorded = claims.filter(function (c) { return c.status === 'recorded'; });
     var st = $('#honorStats');
     if (st) {
-      [[recorded.length, '吟誦已收錄'], [H.text.length, '文本標注'], [H.correct.length, '糾錯採納']]
+      [[recorded.length, '吟誦已收錄'], [H.correct.length, '糾錯採納']]
         .forEach(function (p) {
           var d = el('div', 'stat');
           d.appendChild(el('div', 'n', String(p[0])));
@@ -1596,19 +1597,8 @@
     } else {
       body.appendChild(el('p', 'muted', '尚無已收錄的吟誦——第一個名字等你來。空著的格，就是等著被認領的。'));
     }
-    body.appendChild(el('h3', null, '二　文本標注'));
-    if (H.text.length) {
-      var ul2 = el('ul');
-      H.text.forEach(function (r) {
-        ul2.appendChild(el('li', null,
-          (r.dialect || '') + ' · ' + (r.person || '佚名') + ' · ' +
-          (r.scope || '') + (r.date ? ' · ' + r.date : '')));
-      });
-      body.appendChild(ul2);
-    } else {
-      body.appendChild(el('p', 'muted', '尚無文本標注貢獻。空著的榜，等著第一位標注者。'));
-    }
-    body.appendChild(el('h3', null, '三　糾錯'));
+    // 文本標注一類已撤：文本層由維護者統一整理，不對外徵集（業主指示）
+    body.appendChild(el('h3', null, '二　糾錯'));
     if (H.correct.length) {
       var ul3 = el('ul');
       H.correct.forEach(function (r) {

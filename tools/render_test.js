@@ -112,7 +112,7 @@ const EXPECT = {
   'weihe.html': [],                       // 純內容頁：無動態區塊，只需不拋例外
                                           // 表單結構與按鈕邏輯由 precheck 標籤配平＋瀏覽器抽查把關
   'jiucuo.html': [],                       // 純靜態糾錯表單頁：同上
-  'rongyu.html': [['#honorStats', 6], ['#honorBody', 6]],  // 三類統計＋三類空榜列表
+  'rongyu.html': [['#honorStats', 6], ['#honorBody', 4]],  // 兩類統計（吟誦／糾錯）＋兩類空榜列表
   'fengong.html': [['#fgStats', 18], ['#fgBody', 500], ['#fyTabs', 5], ['#fyStats', 12], ['#fyGrid', 100]],
   'quanben.html': [['#volTabs', 5], ['#rhymeNav', 15], ['#rhymeBody', 500]],
   'canyu.html': [['#canyuGrid', 9]],
