@@ -57,6 +57,26 @@ def cjk_chars(s):
     return [c for c in s if 0x3400 <= ord(c) <= 0x9fff or 0x20000 <= ord(c) <= 0x2FA1F]
 
 
+def exists_exact(root, rel):
+    """逐段比對大小寫的存在性檢查。
+
+    ★ 為什麼不能只用 os.path.exists：開發機是 macOS（檔案系統不分大小寫），
+      伺服器是 Linux（分大小寫）。連結把 About.html 寫成 about.html 之外的形式，
+      在本機一律通過，上線才 404。逐段用 listdir 比對可把這種錯擋在提交前。
+    """
+    cur = root
+    for part in str(rel).split('/'):
+        if part in ('', '.'):
+            continue
+        if part == '..':
+            cur = os.path.dirname(cur)
+            continue
+        if not os.path.isdir(cur) or part not in os.listdir(cur):
+            return False
+        cur = os.path.join(cur, part)
+    return os.path.exists(cur)
+
+
 def main():
     # ---------- ① 標籤配平 ----------
     VOID = {'meta', 'link', 'br', 'hr', 'img', 'input', 'source', 'area', 'base', 'col'}
@@ -113,8 +133,8 @@ def main():
                 continue
             refs += 1
             fp = os.path.normpath(os.path.join(SITE, page_dir, u2.lstrip('/')))
-            if not os.path.exists(fp):
-                missing.append(f'{page} → {u}（不存在）')
+            if not exists_exact(SITE, os.path.relpath(fp, SITE)):
+                missing.append(f'{page} → {u}（不存在或大小寫不符）')
             elif u.endswith('.mp3') and os.path.getsize(fp) < 800:
                 missing.append(f'{page} → {u}（僅 {os.path.getsize(fp)} B，音頻可能未合成）')
     if missing:
@@ -203,8 +223,8 @@ def main():
             frag = urllib.parse.unquote(frag)
             tgt = resolve(p, fn.lstrip('/')) if fn else p
             tgt = tgt.replace(os.sep, '/')
-            if fn and not os.path.exists(os.path.join(SITE, tgt)):
-                dead_links.append(f'{p} → {u}（檔案不存在）')
+            if fn and not exists_exact(SITE, tgt):
+                dead_links.append(f'{p} → {u}（檔案不存在或大小寫不符）')
                 continue
             # ★ 目錄網址：Caddy **不做目錄列表**，所以 /some/dir/ 在線上一定是 404，
             #   除非該目錄裡有 index.html（根目錄 / 就是靠 index.html 運作的）。
@@ -220,6 +240,26 @@ def main():
                 if anchor_page in page_ids and frag not in page_ids[anchor_page]:
                     dead_links.append(
                         f'{p} → {u}（錨點 {frag} 不存在於 {anchor_page}）')
+
+    # ★ app.js 注入的導覽／頁尾連結也要驗。
+    #   全站主要導覽（首頁／底本／歸集進度／反切對帳／共建／方言 ▾）不是寫在 HTML 裡，
+    #   而是 app.js 用 NAV 陣列生成的；先前沒有任何檢查涵蓋它們，
+    #   目標檔改名、大小寫寫錯或指向目錄，都不會被發現。
+    js_links = 0
+    js_src = open(os.path.join(SITE, 'assets', 'app.js'), encoding='utf-8').read()
+    for m in re.finditer(r"href\s*[:=]\s*'([^']+)'", js_src):
+        u = m.group(1)
+        if u.startswith(('http', 'mailto:', '#')):
+            continue
+        fn = urllib.parse.unquote(u.split('#')[0].split('?')[0])
+        if not fn:
+            continue
+        js_links += 1
+        if not exists_exact(SITE, fn):
+            dead_links.append(f'assets/app.js → {u}（目標不存在或大小寫不符）')
+        elif os.path.isdir(os.path.join(SITE, fn)) and \
+                not exists_exact(SITE, fn.rstrip('/') + '/index.html'):
+            dead_links.append(f'assets/app.js → {u}（目錄且無 index.html，線上會 404）')
 
     # sitemap：不只要「loc 可達」，還要結構正確、且涵蓋每一頁。
     # ★ 舊檢查只用正則抽 <loc> 再驗檔存在，因而漏掉兩種真缺陷：
@@ -262,15 +302,15 @@ def main():
     if missing:
         sm_bad.append('sitemap 漏列頁面：' + '、'.join(missing))
     for f in sm_files:
-        if not os.path.exists(os.path.join(SITE, f)):
-            dead_links.append(f'sitemap → {f}')
+        if not exists_exact(SITE, f):
+            dead_links.append(f'sitemap → {f}（不存在或大小寫不符）')
 
     if dead_links:
         bad('⑤ 連結', f'{dead_links}')
     elif sm_bad:
         bad('⑤ 連結', f'{sm_bad}')
     else:
-        ok('⑤ 連結', f'{links} 個頁面連結 ＋ sitemap {len(sm_files)} 條，'
+        ok('⑤ 連結', f'{links} 個頁面連結 ＋ app.js {js_links} 條 ＋ sitemap {len(sm_files)} 條，'
                      f'結構正確且涵蓋全部 {len(want)} 頁')
 
     # ---------- ⑥ 宣稱一致 ----------
