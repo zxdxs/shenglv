@@ -24,11 +24,15 @@ import sys
 
 PAGES = [
     ("/", "首頁"),
-    ("/weihe.html", "為什麼用粵語讀"),
-    ("/quanben.html", "全本"),
-    ("/duizhang.html", "對仗表"),
+    ("/weihe.html", "底本"),
+    ("/fengong.html", "歸集進度"),
+    ("/quanben.html", "全本／方言切換"),
+    ("/shengyun.html", "聲韻入門"),
+    ("/sources.html", "上游來源檔"),
+    ("/duizhang.html", "反切對帳"),
     ("/jyutping.html", "粵拼入門"),
     ("/contribute.html", "提供錄音"),
+    ("/canyu.html", "共建與貢獻墻"),
     ("/about.html", "關於與授權"),
 ]
 
@@ -36,12 +40,17 @@ PAGES = [
 # 注意：判定用「後代總數 + 可見字數」的較大者，不是直系子節點——像 #dzBody 只有 3 個
 # 直系子節點卻裝著 400 列表格與 1.3 萬字，用直系子節點數會誤報。
 EXPECT = {
-    "/": [("#stats", 5), ("#demo", 1), ("#links", 3)],
+    # 首頁的「去哪裡」一節已移除（連結與頁首導覽重複），故不再檢查 #links
+    "/": [("#stats", 5), ("#demo", 1), ("#famGrid", 10)],
     "/weihe.html": [],
-    "/quanben.html": [("#volTabs", 3), ("#rhymeNav", 3), ("#rhymeBody", 1500)],
+    "/fengong.html": [("#fgStats", 6), ("#fgBody", 500), ("#fyTabs", 3)],
+    "/quanben.html": [("#volTabs", 3), ("#rhymeNav", 3), ("#rhymeBody", 1500), ("#ptBar", 3)],
+    "/shengyun.html": [("#cmn-dist", 3), ("#yue-cmp", 20), ("#min-ru", 20)],
+    "/sources.html": [],         # 表格是靜態 HTML
     "/duizhang.html": [("#dzStats", 3), ("#dzBody", 3000)],
     "/about.html": [("#variants", 3), ("#aboutStats", 3)],
     "/contribute.html": [],
+    "/canyu.html": [("#canyuGrid", 9)],
     "/jyutping.html": [],        # 五張表都是靜態 HTML，沒有 JS 產生的動態區塊
 }
 

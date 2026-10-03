@@ -108,7 +108,7 @@ function buildDoc(html, page, loadScript) {
 
 /* ------------------------------------------------------------------ 測試 */
 const EXPECT = {
-  'index.html': [['#stats', 24], ['#demo', 200], ['#links', 15], ['#famGrid', 30]],
+  'index.html': [['#stats', 24], ['#demo', 200], ['#famGrid', 30]],
   'weihe.html': [],                       // 純內容頁：無動態區塊，只需不拋例外
                                           // 表單結構與按鈕邏輯由 precheck 標籤配平＋瀏覽器抽查把關
   'jiucuo.html': [],                       // 純靜態糾錯表單頁：同上

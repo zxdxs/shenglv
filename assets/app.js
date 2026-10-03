@@ -572,26 +572,8 @@
         demo.appendChild(renderStanza(V.rhymes[0].chapters[0], 'v5'));
       });
     }
-    var links = $('#links');
-    if (links) {
-      [
-        ['歸集', [['weihe.html', '底本', '譜系、全韻骨架、歸集什麼、研究什麼——先讀這一頁'],
-                  ['fengong.html', '歸集進度', '376 首分工表：篇目／方言雙視圖，以學會認領、承諾時間逾期滿三個月自動釋放——空行就是推動力'],
-                  ['duizhang.html', '反切對帳', '中古反切與粵語讀音逐條核對，失配即待查清單'],
-                  ['canyu.html', '共建與貢獻墻', '提供錄音 · 提供文本 · 糾錯 · 榮譽，每一份採納都掛上墻']]],
-        ['示例', [['quanben.html', '粵語卷 · 全本 106 韻', '五卷 ' + (M.rhymeCount || 0) + ' 韻逐字粵拼，反切入聲歸集，吟誦證據並排聽'],
-                  ['jyutping.html', '粵拼入門', '九聲六調與粵拼方案，粵語卷的配套教程']]]
-      ].forEach(function (grp) {
-        links.appendChild(el('h3', null, grp[0]));
-        grp[1].forEach(function (p) {
-          var a = el('a', 'card card-link');
-          a.href = p[0];
-          a.appendChild(el('div', 't', p[1]));
-          a.appendChild(el('div', 'd', p[2]));
-          links.appendChild(a);
-        });
-      });
-    }
+    // 「去哪裡」一節已移除（業主指示）：那份連結清單與頁首導覽重複，
+    // 且是硬編碼的，內容改動時容易留下過時描述（曾留著已撤下的「提供文本」）。
   }
 
   /* -------------------------------------------------------- 全本 106 韻 */
