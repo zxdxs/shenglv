@@ -376,6 +376,17 @@ def main():
         #   這些頁面的 inline script 裡本來就有 mailto:hello@solve-lab.cn
         #   與提示文字；直接 grep 整檔會被程式碼滿足，閘門形同虛設
         #   （實測把頁面上的聯絡方式整段刪掉，仍照樣通過）。
+        # 凡提到微信聯絡維護者的頁面，就必須附上可掃的二維碼。
+        # 實際踩過：jiucuo.html 寫了「或微信聯絡維護者（課孫翁）」卻沒有碼，
+        # 讀者掃不到——只提名字等於沒有這條路。
+        ('提到微信聯絡維護者的頁面都附二維碼',
+         all(re.search(r'<img[^>]*src="assets/[^"]*qr[^"]*"', _v)
+             for _p, _v in ((f,
+                             re.sub(r'<script\b.*?</script>', '',
+                                    open(os.path.join(SITE, f), encoding='utf-8').read(),
+                                    flags=re.S))
+                            for f in PAGES)
+             if '課孫翁' in _v)),
         ('徵集貢獻的頁面都提供維護者聯絡方式',
          all('hello@solve-lab.cn' in _vis
              for _pg, _vis in ((f,
