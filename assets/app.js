@@ -505,7 +505,11 @@
                  { text: '維護者　課孫翁' },
                  { text: '關於與授權 →', href: 'about.html' },
                  { text: 'v' + (M.version || '1.0.0'), cls: 'muted' }]);
-    col('文本來源', [{ text: M.source || '' }, { text: '正文屬公有領域', cls: 'muted' }]);
+    // 版本來源寫在這裡而非 data.js：data.js 是 build_shenglv.py 全量產生的，
+    // 手改會被下次建置覆蓋（同檔頭「備案資訊」的說明）。
+    col('文本來源', [{ text: M.source || '' },
+                     { text: '版本來源：國圖藏本，據官網校勘' },
+                     { text: '正文屬公有領域', cls: 'muted' }]);
     col('粵拼與語音', [{ text: M.jyutpingSource || '' },
                        { text: M.ttsSource || '', cls: 'muted' },
                        { text: '授權說明見「關於與授權」', cls: 'muted' }]);
