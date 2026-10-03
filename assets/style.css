@@ -374,3 +374,13 @@ table.src td.sz { text-align: right; white-space: nowrap; color: var(--pin);
                   font-size: .78rem; font-family: "Menlo", "Consolas", monospace; }
 table.src a { color: var(--jyut); text-decoration: none; }
 table.src a:hover { text-decoration: underline; }
+
+/* ---------- 認領狀態：待另約 與 自動釋放 ---------- */
+/* 逾期後已回覆者：不自動釋放，待另約新承諾時間——與「已逾期」區分開 */
+.badge.renego { color: #8a6d1f; border-color: #8a6d1f; background: #fbf5e2; }
+/* 已逾期的列：整列淡紅，滑過才加深 */
+.claim-row.overdue .meta .who { color: var(--no); }
+/* 已自動釋放者回到待認領，但留一圈虛線，表示「曾經被認領、逾期末回覆」 */
+.dot.was-released { border-style: dotted; border-color: var(--no); }
+.dot.renego { background: #d9b23a; border-color: #d9b23a; }
+.dot.claim.overdue, .dot.overdue.renego { background: #d9b23a; }

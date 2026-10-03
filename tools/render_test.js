@@ -29,6 +29,10 @@ function makeNode(tag) {
     addEventListener(ev, fn) { (n._ev = n._ev || {})[ev] = fn; },
     classList: { add(c) { n._cls = (n._cls ? n._cls + ' ' : '') + c; }, remove() {}, contains() { return false; } },
     get firstChild() { return n.children[0] || null; },
+    // ★ 墊片原本只有 firstChild，沒有 lastChild。app.js 在「認領列」用
+    //   line.lastChild.href = …，該分支只在某首已有認領時才執行；
+    //   站上目前 0 筆認領，所以一直沒被觸發，直到測試帶入合成認領才炸出來。
+    get lastChild() { return n.children[n.children.length - 1] || null; },
     get className() { return n._cls; },
     set className(v) { n._cls = v; },
     get textContent() { return n._text; },
@@ -283,6 +287,103 @@ const problems = [];
         fail++;
         problems.push(`${page}：切換方言後字音未正確替換 → 讀音 ${readings.length} 個、` +
                       `蜀拼 ${shupin.length} 個、未收「—」${dashes} 個、停用播放鍵 ${offs} 個`);
+      }
+    }
+  }
+
+  /* ── 認領狀態機的渲染：站上目前 0 筆認領，這條路徑不會被任何既有檢查走到 ──
+     注入合成認領（每種狀態一筆）後渲染 fengong.html，斷言五種徽章都出現、
+     且「已釋放」那筆不計入已覆蓋。日期一律以今天推算，故不受執行日影響。 */
+  {
+    const page = 'fengong.html[合成認領]';
+    const html = fs.readFileSync(path.join(SITE, 'fengong.html'), 'utf8');
+    const sandbox = { window: {}, document: null, console, Array, Math, String, JSON,
+                      Object, Promise, setTimeout, Boolean, Number, RegExp, Date };
+    sandbox.window.location = { hash: '', search: '' };
+    sandbox.window.document = null;
+    vm.createContext(sandbox);
+
+    const shift = (n) => {                      // 今天的 n 個月後（15 號，避開月底夾擠）
+      const t = new Date();
+      const m0 = t.getMonth() + n, y = t.getFullYear() + Math.floor(m0 / 12), m = m0 % 12 + 1;
+      return `${y}-${String(m).padStart(2, '0')}-15`;
+    };
+    const CLAIMS = [
+      { id: 'C-claimed', seq: 1, dialect: { d: 'yue', pian: 'guangfu', dian: '廣州' },
+        society: '甲吟誦學會', claimDate: shift(-1), promiseDate: shift(1),
+        status: 'claimed', audit: 'pending' },
+      { id: 'C-overdue', seq: 2, dialect: { d: 'yue', pian: 'guangfu', dian: '廣州' },
+        society: '乙吟誦學會', claimDate: shift(-3), promiseDate: shift(-1),
+        status: 'claimed', audit: 'pending' },
+      { id: 'C-renego', seq: 3, dialect: { d: 'yue', pian: 'guangfu', dian: '廣州' },
+        society: '丙吟誦學會', claimDate: shift(-4), promiseDate: shift(-2), lastReply: shift(-1),
+        status: 'claimed', audit: 'pending' },
+      { id: 'C-recorded', seq: 4, dialect: { d: 'yue', pian: 'guangfu', dian: '廣州' },
+        society: '丁吟誦學會', singer: '張三', lineage: '某師', claimDate: shift(-3),
+        promiseDate: shift(-1), status: 'recorded', audit: 'verified',
+        audio: 'audio/v1/0002.mp3' },
+    ];
+    function loadScript(src, node) {
+      const p = path.join(SITE, src.replace(/^\.?\//, ''));
+      try {
+        vm.runInContext(fs.readFileSync(p, 'utf8'), sandbox, { filename: src });
+        // 在 app.js 讀取之前，把合成認領塞進 registry（同一個物件參照）
+        if (src.endsWith('registry.js')) {
+          sandbox.window.SHENGLV_REGISTRY.claims = CLAIMS;
+          sandbox.window.SHENGLV_REGISTRY.released = [Object.assign({}, CLAIMS[0], {
+            id: 'C-released', seq: 5, society: '戊吟誦學會',
+            promiseDate: shift(-5), releaseDate: shift(-2), releasedOn: shift(-2),
+          })];
+        }
+        if (node && node.onload) node.onload();
+      } catch (e) { if (node && node.onerror) node.onerror(); }
+    }
+    const { document, registry, fire } = buildDoc(html, 'fengong.html', loadScript);
+    sandbox.document = document;
+    sandbox.window.document = document;
+
+    let err = null;
+    try {
+      for (const f of [...html.matchAll(/<script\s+src="([^"]+)"/g)].map(m => m[1])) {
+        vm.runInContext(fs.readFileSync(path.join(SITE, f.replace(/^\.?\//, '')), 'utf8'),
+                        sandbox, { filename: f });
+        if (f.endsWith('registry.js')) {
+          sandbox.window.SHENGLV_REGISTRY.claims = CLAIMS;
+          sandbox.window.SHENGLV_REGISTRY.released = [Object.assign({}, CLAIMS[0], {
+            id: 'C-released', seq: 5, society: '戊吟誦學會',
+            promiseDate: shift(-5), releaseDate: shift(-2), releasedOn: shift(-2),
+          })];
+        }
+      }
+      fire();
+      await new Promise(r => setTimeout(r, 120));
+    } catch (e) { err = e; }
+
+    if (err) {
+      fail++; problems.push(`${page}：渲染拋出例外 → ${err.message}`);
+    } else {
+      const body = registry['fgBody'];
+      const badges = collectClass(body, 'badge');
+      const want = ['已認領', '已逾期', '待另約', '已收錄', '已核'];
+      const miss = want.filter(w => badges.indexOf(w) < 0);
+      // 「待認領」不可因合成認領而消失（釋放者要回到待認領）
+      const hasOpen = badges.indexOf('待認領') >= 0;
+      // 學會是認領主體，必須出現；吟誦者只在已收錄時出現
+      const text = (function walk(n, acc) {
+        if (n._text) acc.push(n._text);
+        n.children.forEach(c => walk(c, acc));
+        return acc;
+      })(body, []).join(' ');
+      const whoOk = text.indexOf('甲吟誦學會') >= 0 && text.indexOf('張三') >= 0;
+      if (!miss.length && hasOpen && whoOk) {
+        pass++;
+        console.log(`✓ ${page.padEnd(15)} 徽章 ${want.join('／')} 齊備；` +
+                    `待認領仍在；學會與吟誦者皆顯示`);
+      } else {
+        fail++;
+        problems.push(`${page}：${miss.length ? '缺徽章 ' + miss.join('、') : ''}` +
+                      `${hasOpen ? '' : ' 「待認領」消失'}` +
+                      `${whoOk ? '' : ' 學會或吟誦者未顯示'}`);
       }
     }
   }

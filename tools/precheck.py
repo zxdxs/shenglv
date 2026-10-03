@@ -25,6 +25,12 @@ import urllib.parse
 import xml.etree.ElementTree as ET
 from collections import Counter
 
+# ★ 月份運算直接沿用建置腳本那一份，不抄第二份。
+#   逾期釋放的日期算式若三處（build_registry／app.js／precheck）各寫一份，
+#   遲早會算出不同的一天，而那種不一致要到線上才會被發現。
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from build_registry import _add_months   # noqa: E402
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 # 站點目錄：同時支援兩種放置方式——
 #   舊佈局   <專案>/precheck.py       站點在 <專案>/site/
@@ -471,6 +477,7 @@ def main():
     if pidx != len(poems):
         errs.append(f'poems 多出 {len(poems) - pidx} 首')
     dmap = {d['id']: d for d in dialects}
+    reg_meta = REG.get('meta', {}) if isinstance(REG, dict) else {}
     seen = set()
     for c in claims:
         seq = c.get('seq')
@@ -484,14 +491,27 @@ def main():
             errs.append(f'{c.get("id")}: 狀態 {c.get("status")} 非法')
         if c.get('audit') not in ('pending', 'verified'):
             errs.append(f'{c.get("id")}: 審核 {c.get("audit")} 非法')
-        for k in ('claimDate', 'deadline'):
+        # 認領以學會為單位，不以個人
+        if not str(c.get('society') or '').strip():
+            errs.append(f'{c.get("id")}: 缺 society（認領以學會為單位）')
+        for k in ('claimDate', 'promiseDate'):
             if not re.match(r'^\d{4}-\d{2}-\d{2}$', str(c.get(k) or '')):
                 errs.append(f'{c.get("id")}: {k} 非法')
-        if str(c.get('deadline') or '') < str(c.get('claimDate') or ''):
-            errs.append(f'{c.get("id")}: 期限早於認領日期')
+        cd, pd = str(c.get('claimDate') or ''), str(c.get('promiseDate') or '')
+        if re.match(r'^\d{4}-\d{2}-\d{2}$', cd) and re.match(r'^\d{4}-\d{2}-\d{2}$', pd):
+            if pd <= cd:
+                errs.append(f'{c.get("id")}: 承諾時間未晚於認領日')
+            cap = reg_meta.get('promiseMaxMonths', 12)
+            if pd > _add_months(cd, cap):
+                errs.append(f'{c.get("id")}: 承諾時間超過 {cap} 個月上限')
+        if c.get('status') == 'recorded' and not str(c.get('singer') or '').strip():
+            errs.append(f'{c.get("id")}: 已收錄但缺 singer（實際吟誦者）')
         if c.get('status') == 'recorded' and not (
                 c.get('audio') and os.path.exists(os.path.join(SITE, c['audio'].lstrip('/')))):
             errs.append(f'{c.get("id")}: 已收錄但音頻缺失')
+        # 建置已把達釋放條件者移出 claims；仍留在 claims 者不應已是 released
+        if c.get('state') == 'released':
+            errs.append(f'{c.get("id")}: 已達自動釋放條件卻仍在 claims（應由 build_registry 移出）')
         key = (seq, d.get('d'), d.get('pian'), d.get('dian'))
         if key in seen:
             errs.append(f'{c.get("id")}: 與他條重複')

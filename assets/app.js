@@ -569,7 +569,7 @@
     if (links) {
       [
         ['歸集', [['weihe.html', '底本', '譜系、全韻骨架、歸集什麼、研究什麼——先讀這一頁'],
-                  ['fengong.html', '歸集進度', '376 首分工表：篇目／方言雙視圖，以學會認領、逾期釋放——空行就是推動力'],
+                  ['fengong.html', '歸集進度', '376 首分工表：篇目／方言雙視圖，以學會認領、承諾時間逾期滿三個月自動釋放——空行就是推動力'],
                   ['duizhang.html', '反切對帳', '中古反切與粵語讀音逐條核對，失配即待查清單'],
                   ['canyu.html', '共建與貢獻墻', '提供錄音 · 提供文本 · 糾錯 · 榮譽，每一份採納都掛上墻']]],
         ['示例', [['quanben.html', '粵語卷 · 全本 106 韻', '五卷 ' + (M.rhymeCount || 0) + ' 韻逐字粵拼，反切入聲歸集，吟誦證據並排聽'],
@@ -731,8 +731,9 @@
       var row = el('div', 'claim-row' + (claimState(c) === 'overdue' ? ' overdue' : ''));
       var meta = el('span', 'meta');
       meta.appendChild(el('span', 'who', t[0] + '　' + claimDialectLabel(c)));
-      meta.appendChild(el('span', 'dim', (c.singer || '佚名') + (c.lineage ? '（' + c.lineage + '）' : '')
-        + (c.society ? '　認領：' + c.society : '')));
+      var w1 = claimWho(c);
+      meta.appendChild(el('span', 'dim', '認領：' + w1.who
+        + (w1.by ? '　吟誦：' + w1.by : '')));
       stateBadges(c).forEach(function (b) { meta.appendChild(b); });
       row.appendChild(meta);
       if (c.audio) {
@@ -1136,12 +1137,45 @@
            '-' + String(d.getDate()).padStart(2, '0');
   }
 
-  /* 認領狀態：open（無登記）／claimed／overdue／recorded */
+  /* YYYY-MM-DD 加 n 個月。月底夾擠（1/31 + 1 個月 → 2/28），與 build_registry.py
+     的 _add_months() 同一規則——兩端必須算出同一天，否則頁面與建置會不同調。 */
+  function addMonths(iso, n) {
+    var y = +iso.slice(0, 4), m = +iso.slice(5, 7), d = +iso.slice(8, 10);
+    var m0 = m - 1 + n, y2 = y + Math.floor(m0 / 12), m2 = m0 % 12 + 1;
+    var leap = (y2 % 4 === 0 && (y2 % 100 !== 0 || y2 % 400 === 0));
+    var last = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m2 - 1];
+    return y2 + '-' + String(m2).padStart(2, '0') + '-' + String(Math.min(d, last)).padStart(2, '0');
+  }
+
+  /* 認領狀態機（與 build_registry.py 的 claim_state() 同一套規則）
+       open         無登記
+       claimed      已認領，尚未到承諾時間
+       overdue      承諾時間已過，仍在寬限內且未回覆
+       renegotiate  逾期後已回覆 → 不自動釋放，待另約新承諾時間
+       released     逾期滿寬限期仍未回覆 → 自動釋放回「待認領」
+       recorded     已收錄（不因期限釋放）
+     ★ 關鍵：逾期 ≠ 釋放。逾期只是提醒，要再過 graceMonths 個月沒回覆才釋放。 */
   function claimState(c) {
     if (!c) return 'open';
     if (c.status === 'recorded') return 'recorded';
-    if (c.status === 'claimed' && c.deadline && c.deadline < todayStr()) return 'overdue';
+    var pd = c.promiseDate;
+    if (!pd) return 'claimed';
+    var g = (REG && REG.meta && REG.meta.graceMonths) || 3;
+    if (c.lastReply && c.lastReply >= pd) return 'renegotiate';
+    var rel = c.releaseDate || addMonths(pd, g);
+    var t = todayStr();
+    if (t > rel) return 'released';
+    if (t > pd) return 'overdue';
     return 'claimed';
+  }
+
+  /* 已釋放者回到「待認領」——但它曾有認領紀錄，公開列出來才誠實 */
+  function releasedFor(seq) {
+    if (!REG || !REG.released) return null;
+    for (var i = 0; i < REG.released.length; i++) {
+      if (REG.released[i].seq === seq) return REG.released[i];
+    }
+    return null;
   }
 
   function dialectById(id) {
@@ -1159,12 +1193,25 @@
     return (d ? d.name : c.dialect.d) + '·' + (pian || c.dialect.pian) + '·' + c.dialect.dian;
   }
 
+  /* 認領主體（學會）與實際吟誦者（個人）分開顯示。
+     規則：認領以學會為單位，不以個人；singer 只在已收錄時才出現。
+     回傳兩段：{who: 認領者文字, by: 吟誦者文字（可能為空）} */
+  function claimWho(c) {
+    var who = (c.society || '').trim() || '（未載明學會）';
+    var by = '';
+    if (claimState(c) === 'recorded' && c.singer) {
+      by = c.singer + (c.lineage ? '（' + c.lineage + '）' : '');
+    }
+    return { who: who, by: by };
+  }
+
   /* 狀態徽章（已收錄者附審核徽章：已核／待核） */
   function stateBadges(c) {
     var st = claimState(c), out = [];
-    if (st === 'open') out.push(el('span', 'badge open', '待認領'));
+    if (st === 'open' || st === 'released') out.push(el('span', 'badge open', '待認領'));
     else if (st === 'claimed') out.push(el('span', 'badge claimed', '已認領'));
     else if (st === 'overdue') out.push(el('span', 'badge overdue', '已逾期'));
+    else if (st === 'renegotiate') out.push(el('span', 'badge renego', '待另約'));
     else if (st === 'recorded') {
       out.push(el('span', 'badge recorded', '已收錄'));
       out.push(el('span', 'badge ' + (c.audit === 'verified' ? 'verified' : 'pending'),
@@ -1212,7 +1259,9 @@
     p.setAttribute('aria-label', '播放 ' + claimDialectLabel(c) + ' 整首吟誦');
     p.addEventListener('click', function () { if (c.audio) playWhole(c.audio, chip); });
     chip.appendChild(p);
-    chip.appendChild(document.createTextNode(claimDialectLabel(c) + ' · ' + (c.singer || '佚名')));
+    var w2 = claimWho(c);
+    chip.appendChild(document.createTextNode(claimDialectLabel(c) + ' · ' + w2.who
+      + (w2.by ? '（吟誦 ' + w2.by + '）' : '')));
     return chip;
   }
 
@@ -1259,16 +1308,16 @@
     if (window.location.hash === '#fy') showDia(true);
     else showDia(false);
     var poems = regPoems(), claims = regClaims();
-    var st = { recorded: 0, claimed: 0, overdue: 0 };
+    var st = { recorded: 0, claimed: 0, overdue: 0, renegotiate: 0 };
     claims.forEach(function (c) {
       var s = claimState(c);
-      if (s === 'recorded') st.recorded++;
-      else if (s === 'overdue') st.overdue++;
-      else if (s === 'claimed') st.claimed++;
+      if (st[s] !== undefined) st[s]++;
     });
+    var nRel = (REG.released || []).length;
     [[poems.length, '篇目（首）'], [REG.meta.nRhymes, '韻部'],
      [REG.meta.nDialects, '方言區'], [st.recorded, '已收錄版本'],
-     [st.claimed, '已認領'], [st.overdue, '已逾期']
+     [st.claimed, '已認領'], [st.overdue, '已逾期'],
+     [st.renegotiate, '待另約'], [nRel, '已釋放（回到待認領）']
     ].forEach(function (p) {
       var d = el('div', 'stat');
       d.appendChild(el('div', 'n', String(p[0])));
@@ -1289,7 +1338,8 @@
       op.value = d.name; diaSel.appendChild(op);
     });
     [['all', '全部狀態'], ['open', '待認領'], ['claimed', '已認領'],
-     ['overdue', '已逾期'], ['recorded', '已收錄']].forEach(function (p) {
+     ['overdue', '已逾期'], ['renegotiate', '待另約'],
+     ['recorded', '已收錄']].forEach(function (p) {
       var op = el('option', null, p[1]);
       op.value = p[0]; stSel.appendChild(op);
     });
@@ -1356,8 +1406,9 @@
       if (!cs.length) vtd.appendChild(el('span', 'muted', '—'));
       else cs.forEach(function (c) {
         var line = el('div');
-        line.appendChild(el('span', null, claimDialectLabel(c) + '　' + (c.singer || '佚名')
-          + (c.lineage ? '（' + c.lineage + '）' : '') + (c.society ? '　' + c.society : '')));
+        var w3 = claimWho(c);
+        line.appendChild(el('span', null, claimDialectLabel(c) + '　' + w3.who
+          + (w3.by ? '　吟誦：' + w3.by : '')));
         line.appendChild(el('a', 'muted', '去聽 →'));
         line.lastChild.href = 'quanben.html#' + p.volId + '-' + encodeURIComponent(p.rhyme);
         vtd.appendChild(line);
@@ -1406,14 +1457,17 @@
     var rec = cs.filter(function (c) { return claimState(c) === 'recorded'; });
     var clm = cs.filter(function (c) { return claimState(c) === 'claimed'; });
     var od = cs.filter(function (c) { return claimState(c) === 'overdue'; });
-    var recS = {}, clmS = {}, odS = {}, covS = {};
+    var rg = cs.filter(function (c) { return claimState(c) === 'renegotiate'; });
+    var recS = {}, clmS = {}, odS = {}, rgS = {}, covS = {};
     rec.forEach(function (c) { recS[c.seq] = 1; covS[c.seq] = 1; });
     clm.forEach(function (c) { clmS[c.seq] = 1; covS[c.seq] = 1; });
     od.forEach(function (c) { odS[c.seq] = 1; covS[c.seq] = 1; });
+    rg.forEach(function (c) { rgS[c.seq] = 1; covS[c.seq] = 1; });
+    // 已釋放者不在 claims 內，故自然落回「待認領」——正是自動釋放的用意
     var openCount = poems.length - Object.keys(covS).length;
 
     [[rec.length, '已收錄（首）'], [clm.length, '已認領'], [od.length, '已逾期'],
-     [openCount, '待認領']].forEach(function (p) {
+     [rg.length, '待另約'], [openCount, '待認領']].forEach(function (p) {
       var d = el('div', 'stat');
       d.appendChild(el('div', 'n', String(p[0])));
       d.appendChild(el('div', 'l', p[1]));
@@ -1441,8 +1495,11 @@
         ps.forEach(function (p) {
           var dot = el('span', 'dot');
           if (recS[p.seq]) dot.classList.add('rec');
+          else if (rgS[p.seq]) dot.classList.add('renego');
           else if (odS[p.seq]) dot.classList.add('overdue');
           else if (clmS[p.seq]) dot.classList.add('claim');
+          // 其餘（含已自動釋放者）留白＝待認領，與自動釋放的用意一致
+          if (releasedFor(p.seq)) dot.classList.add('was-released');
           dots.appendChild(dot);
         });
         a.appendChild(dots);
@@ -1460,8 +1517,9 @@
         var row = el('div', 'claim-row');
         var meta = el('span', 'meta');
         meta.appendChild(el('span', 'who', '第 ' + String(c.seq).padStart(3, '0') + ' 首　' + claimDialectLabel(c)));
-        meta.appendChild(el('span', 'dim', (c.singer || '佚名') + (c.lineage ? '（' + c.lineage + '）' : '')
-          + (c.society ? '　認領：' + c.society : '')));
+        var w4 = claimWho(c);
+        meta.appendChild(el('span', 'dim', '認領：' + w4.who
+          + (w4.by ? '　吟誦：' + w4.by : '')));
         stateBadges(c).forEach(function (b) { meta.appendChild(b); });
         row.appendChild(meta);
         if (c.audio) {
@@ -1527,7 +1585,7 @@
       var ul = el('ul');
       recorded.forEach(function (c) {
         ul.appendChild(el('li', null,
-          (c.singer || '佚名') + '（' + (c.society || '個人') + '）· ' +
+          c.society + (c.singer ? '（吟誦 ' + c.singer + '）' : '') + ' · ' +
           (c.dialect ? c.dialect.d : '') + ' · 第 ' + c.seq + ' 首 · ' +
           (c.audit === 'verified' ? '已核' : '待核')));
       });

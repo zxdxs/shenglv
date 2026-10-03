@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>歸集進度 —— 中文聲韻</title>
-<meta name="description" content="歸集進度：以《聲律發蒙》劉節五卷本 376 首分工表為準，逐韻逐章徵集聲音證據——以吟誦學會為單位認領、每韻三個月期限、逾期自動釋放回待認領。總表公開，誰都能看見哪些還空著。">
+<meta name="description" content="歸集進度：以《聲律發蒙》劉節五卷本 376 首分工表為準，逐韻逐章徵集聲音證據——以吟誦學會為單位認領；認領時自訂承諾交件時間，逾期滿三個月仍未回覆者自動釋放回待認領。總表公開，誰都能看見哪些還空著。">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body data-page="fengong.html">
@@ -18,7 +18,8 @@
   <p class="lead">
     底本以劉節五卷本《聲律發蒙》為準，逐韻逐章為中文聲韻歸集聲音證據——
     徵集各方言、各流派的真人吟誦。
-    <b>以學會為單位認領</b>，不以個人；認領後給三個月期限，<b>逾期自動釋放</b>回「待認領」。
+    <b>以學會為單位認領</b>，不以個人。認領時自訂<b>承諾交件時間</b>（最長認領後 12 個月）；
+    承諾時間過後即標為「已逾期」，<b>逾期再滿三個月仍未回覆者，自動釋放</b>回「待認領」。
     總表公開——空著的行，本身就是推動力。
   </p>
 
@@ -49,9 +50,10 @@
     <div class="stats" id="fgStats"></div>
 
     <div class="legend-line">
-      <span><span class="badge open">待認領</span> 尚無任何學會認領</span>
-      <span><span class="badge claimed">已認領</span> 進行中，期限內</span>
-      <span><span class="badge overdue">已逾期</span> 超過期限，可重新認領</span>
+      <span><span class="badge open">待認領</span> 尚無學會認領（或已自動釋放）</span>
+      <span><span class="badge claimed">已認領</span> 進行中，未到承諾時間</span>
+      <span><span class="badge overdue">已逾期</span> 承諾時間已過，仍保留三個月</span>
+      <span><span class="badge renego">待另約</span> 逾期後已回覆，另訂承諾時間</span>
       <span><span class="badge recorded">已收錄</span> 已有真人吟誦</span>
       <span><span class="badge verified">已核</span> 讀音與錄音已核驗</span>
       <span><span class="badge pending">待核</span> 尚未核驗</span>
@@ -73,11 +75,16 @@
   <div class="card">
     <h3>機制</h3>
     <ul>
-      <li><b>以學會為單位認領</b>：建議一次認領一整韻（三至四首，四十八至六十四句），
-        期限三個月；學會內部協調吟誦者。</li>
-      <li><b>逾期自動釋放</b>：已認領超過期限者，頁面即時標為「已逾期」，任何學會可重新認領。
-        已收錄的成果不因期限釋放。</li>
-      <li><b>永遠顯示元數據</b>：方言點、吟誦者、師承、認領學會、審核狀態，逐行公開。</li>
+      <li><b>以學會為單位認領，不以個人</b>：建議一次認領一整韻（三至四首，四十八至六十四句），
+        由學會內部協調吟誦者。吟誦者（個人）於交件時具名，著作權歸吟誦者。</li>
+      <li><b>認領時自訂承諾交件時間</b>：須晚於認領日，且<b>最長不超過認領後 12 個月</b>——
+        沒有上限的話，承諾很遠的日期就等於無限期占位。</li>
+      <li><b>逾期不等於釋放。</b>過了承諾時間即標為「已逾期」，但仍保留認領；
+        <b>逾期再滿三個月仍未回覆者，自動釋放</b>回「待認領」，任何學會可重新認領。</li>
+      <li><b>期間有回覆則不自動釋放</b>：逾期後若已回覆（說明進度或申請延期），
+        狀態改為「待另約」，由維護者與學會另訂新的承諾時間，不會默默消失。</li>
+      <li><b>已收錄的成果不因期限釋放。</b></li>
+      <li><b>永遠顯示元數據</b>：方言點、認領學會、吟誦者、師承、審核狀態，逐行公開。</li>
       <li><b>審核</b>：已收錄版本分「待核／已核」兩檔——核讀音（對照反切）與錄音品質。</li>
     </ul>
   </div>
