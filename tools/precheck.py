@@ -21,6 +21,7 @@ precheck.py —— 聲律發蒙·中文聲韻站 上站前自檢（全本 106 �
 """
 
 import json, os, re, sys
+import xml.etree.ElementTree as ET
 from collections import Counter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -158,15 +159,52 @@ def main():
             links += 1
             if not os.path.exists(os.path.join(SITE, m.group(1).lstrip('/'))):
                 dead_links.append(f'{p} → {m.group(1)}')
-    locs = re.findall(r'<loc>([^<]+)</loc>',
-                      open(os.path.join(SITE, 'sitemap.xml'), encoding='utf-8').read())
-    for loc in locs:
-        if not os.path.exists(os.path.join(SITE, loc.rsplit('/', 1)[-1])):
-            dead_links.append(f'sitemap → {loc}')
+
+    # sitemap：不只要「loc 可達」，還要結構正確、且涵蓋每一頁。
+    # ★ 舊檢查只用正則抽 <loc> 再驗檔存在，因而漏掉兩種真缺陷：
+    #   ① <url> 被嵌進 <loc> 裡——XML 合法，但違反 sitemap schema，搜尋引擎會拒收；
+    #   ② 新頁面忘了加進 sitemap（shengyun.html 就是這樣漏的）。
+    #   故改為用 XML 解析器驗結構，再比對 PAGES。
+    sm_path = os.path.join(SITE, 'sitemap.xml')
+    sm_raw = open(sm_path, encoding='utf-8').read()
+    NS = '{http://www.sitemaps.org/schemas/sitemap/0.9}'
+    sm_bad = []
+    try:
+        root = ET.fromstring(sm_raw)
+    except ET.ParseError as e:
+        sm_bad.append(f'sitemap.xml 不是合法 XML：{e}')
+        root = None
+    sm_files = []
+    if root is not None:
+        if root.tag != NS + 'urlset':
+            sm_bad.append(f'sitemap 根元素應為 urlset，實為 {root.tag}')
+        for i, u in enumerate(root.findall(NS + 'url')):
+            loc = u.find(NS + 'loc')
+            if loc is None:
+                sm_bad.append(f'sitemap 第 {i+1} 個 <url> 沒有 <loc>')
+                continue
+            if len(loc):      # <loc> 內不得再有元素——正是先前那個缺陷
+                sm_bad.append(f'sitemap 第 {i+1} 個 <loc> 內嵌了元素（結構錯誤）')
+            t = (loc.text or '').strip()
+            if not t.startswith('https://shenglv.org.cn/'):
+                sm_bad.append(f'sitemap loc 不是本站網址：{t!r}')
+                continue
+            sm_files.append(t.rsplit('/', 1)[-1])
+    want = [p for p in PAGES if p != '404.html']
+    missing = [p for p in want if p not in sm_files]
+    if missing:
+        sm_bad.append('sitemap 漏列頁面：' + '、'.join(missing))
+    for f in sm_files:
+        if not os.path.exists(os.path.join(SITE, f)):
+            dead_links.append(f'sitemap → {f}')
+
     if dead_links:
         bad('⑤ 連結', f'{dead_links}')
+    elif sm_bad:
+        bad('⑤ 連結', f'{sm_bad}')
     else:
-        ok('⑤ 連結', f'{links} 個頁面連結 ＋ sitemap {len(locs)} 條全部可達')
+        ok('⑤ 連結', f'{links} 個頁面連結 ＋ sitemap {len(sm_files)} 條，'
+                     f'結構正確且涵蓋全部 {len(want)} 頁')
 
     # ---------- ⑥ 宣稱一致 ----------
     idx = open(os.path.join(SITE, 'index.html'), encoding='utf-8').read()
