@@ -388,6 +388,61 @@ const problems = [];
     }
   }
 
+  /* ── 方言順序：頁面上的排列必須等於產線給的排列 ──────────────────────
+     實際踩過：renderFamGrid 把粵語硬寫在首位，於是產線把普通話調到第一時，
+     首頁仍顯示粵語在前。順序只能有一個來源（fangyan-meta.js），
+     任何在 app.js 另外寫死順序的地方都會被這道檢查抓出來。 */
+  {
+    const page = 'index.html[方言順序]';
+    const html = fs.readFileSync(path.join(SITE, 'index.html'), 'utf8');
+    // 產線給的順序
+    const metaRaw = fs.readFileSync(path.join(SITE, 'assets', 'fangyan-meta.js'), 'utf8');
+    const want = JSON.parse(metaRaw.slice(metaRaw.indexOf('=') + 1).trim().replace(/;$/, ''))
+      .families.map(f => f.name);
+
+    const sandbox = { window: {}, document: null, console, Array, Math, String, JSON,
+                      Object, Promise, setTimeout, Boolean, Number, RegExp, Date };
+    sandbox.window.location = { hash: '', search: '' };
+    sandbox.window.document = null;
+    vm.createContext(sandbox);
+    function loadScript(src, node) {
+      const p = path.join(SITE, src.replace(/^\.?\//, ''));
+      try {
+        vm.runInContext(fs.readFileSync(p, 'utf8'), sandbox, { filename: src });
+        if (node && node.onload) node.onload();
+      } catch (e) { if (node && node.onerror) node.onerror(); }
+    }
+    const { document, registry, fire } = buildDoc(html, 'index.html', loadScript);
+    sandbox.document = document;
+    sandbox.window.document = document;
+
+    let err = null;
+    try {
+      for (const f of [...html.matchAll(/<script\s+src="([^"]+)"/g)].map(m => m[1])) {
+        vm.runInContext(fs.readFileSync(path.join(SITE, f.replace(/^\.?\//, '')), 'utf8'),
+                        sandbox, { filename: f });
+      }
+      fire();
+      await new Promise(r => setTimeout(r, 120));
+    } catch (e) { err = e; }
+
+    if (err) {
+      fail++; problems.push(`${page}：渲染拋出例外 → ${err.message}`);
+    } else {
+      const got = collectClass(registry['famGrid'], 'famname');
+      const navGot = collectClass(registry['nav'], 'dia-chip').slice(0, want.length);
+      const same = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
+      if (same(got, want) && same(navGot, want)) {
+        pass++;
+        console.log(`✓ ${page.padEnd(15)} 首頁索引與導覽下拉皆為 ${want.join('→')}`);
+      } else {
+        fail++;
+        problems.push(`${page}：順序與產線不一致 → 期望 ${want.join('→')}；` +
+                      `首頁索引 ${got.join('→') || '(空)'}；導覽下拉 ${navGot.join('→') || '(空)'}`);
+      }
+    }
+  }
+
   console.log('='.repeat(64));
   if (problems.length) {
     problems.forEach(p => console.log('✗ ' + p));

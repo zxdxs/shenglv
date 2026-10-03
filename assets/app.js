@@ -85,7 +85,7 @@
     return (d && d[k]) || null;
   }
 
-  /* 某語族的方言點（不含粵語；粵語由呼叫端另外排在最前） */
+  /* 某語族的方言點。粵語也是一個語族（只有一點），故這裡同樣取得到。 */
   function famPoints(k) {
     var f = fyFamily(k);
     return f ? f.points : [];
@@ -399,8 +399,11 @@
     { href: 'quanben.html', label: '方言', children: [
       // ★ 方言點已併入本站，不再外連 /fangyan/。
       //   這些連結指向本站全本頁並帶 ?pt=，由前端切到該點。
-      { label: '粵語', href: 'quanben.html', on: true },
+      // ★ 普通話排首位（業主指示）：它是整組對照的基準線。
+      //   注意順序與預設是兩件事——預設選中的點仍是粵語（見 PT 預設值），
+      //   因粵語有逐字粵拼與全書音檔，是本站主線視圖。
       { label: '普通話', href: 'quanben.html?pt=putonghua', on: true },
+      { label: '粵語', href: 'quanben.html', on: true },
       { label: '四川話', href: 'quanben.html?pt=tongyin', on: true },
       { label: '吳語', href: 'quanben.html?pt=shanghai', on: true },
       { label: '閩南語', href: 'quanben.html?pt=chaozhou', on: true },
@@ -776,11 +779,11 @@
       host.appendChild(el('p', 'muted', '方言清單未載入（assets/fangyan-meta.js）。'));
       return;
     }
-    var all = [{ key: 'yue', name: '粵語', area: '粵海片', note: '' }].concat(FYM.points);
-    var byFam = [{ key: 'yue', name: '粵語', points: all.slice(0, 1) }]
-      .concat(FYM.families.filter(function (f) { return f.key !== 'yue'; }));
+    // ★ 直接照 fangyan-meta.js 的語族順序排（已含粵語）。
+    //   先前在這裡把粵語硬寫在首位，於是改順序時漏了這一頁——
+    //   順序只能有一個來源，就是產線給的那份。
     var grid = el('div', 'fampoints');
-    byFam.forEach(function (f) {
+    FYM.families.forEach(function (f) {
       var box = el('div', 'famrow2');
       box.appendChild(el('div', 'famname', f.name));
       var chips = el('div', 'chips');
