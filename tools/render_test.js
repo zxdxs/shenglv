@@ -15,7 +15,7 @@ const vm = require('vm');
 // 同時支援兩種放置方式：舊佈局（上一層有 site/）與倉庫佈局（上一層就是站點）
 const _siteSub = path.join(__dirname, '..', 'site');
 const SITE = fs.existsSync(_siteSub) ? _siteSub : path.join(__dirname, '..');
-const PAGES = ['index.html', 'weihe.html', 'fengong.html', 'canyu.html', 'wip.html', 'quanben.html', 'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', 'shengyun.html', 'sources.html', '404.html'];
+const PAGES = ['index.html', 'weihe.html', 'fengong.html', 'canyu.html', 'wip.html', 'quanben.html', 'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', 'shengyun.html', 'sources.html', 'tigong.html', '404.html'];
 
 /* ------------------------------------------------------------ 最小 DOM 墊片 */
 function makeNode(tag) {
@@ -132,6 +132,8 @@ const EXPECT = {
   // 只為每個 id 建空節點、不解析子節點，故驗不了靜態內容——那 26 個檔案連結
   // 由 precheck ⑤ 驗（它會逐條確認目標檔存在）。這裡只驗共通的 nav/footer。
   'sources.html': [],
+  // 推薦方言頁：表單與inline script 皆為靜態，動態區塊只有共通的 nav/footer
+  'tigong.html': [],
   '404.html': []
 };
 

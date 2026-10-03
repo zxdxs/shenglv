@@ -9,6 +9,7 @@ precheck.py —— 聲律發蒙·中文聲韻站 上站前自檢（全本 106 �
 ② 本地資源引用存在           抓漏打包
 ③ app.js 取用的 id 存在於頁面  抓「選取器打錯、區塊永遠空白」
 ④ 資料檔可解析且計數非零      抓產線靜默失敗
+  ③ 亦驗各頁 inline script 取用的 id——打錯不會拋例外，只會讓按鈕失效
 ⑤ 錨點與內部連結可達          抓死連結
 ⑥ 關鍵宣稱與資料一致          抓文案與數據不符（本專案高發病）
 ⑦ 音頻完整性                 每一行對句都要有音檔；數量與 meta 相符
@@ -40,7 +41,7 @@ _site_sub = os.path.join(HERE, 'site')
 SITE = _site_sub if os.path.isdir(_site_sub) else os.path.dirname(HERE)
 ASSETS = os.path.join(SITE, 'assets')
 PAGES = ['index.html', 'weihe.html', 'fengong.html', 'canyu.html', 'wip.html', 'quanben.html',
-         'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', 'shengyun.html', 'sources.html', '404.html']
+         'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', 'shengyun.html', 'sources.html', 'tigong.html', '404.html']
 
 fails, warns, checks = [], [], []
 
@@ -156,12 +157,34 @@ def main():
         present |= set(re.findall(r'id="([A-Za-z0-9_-]+)"',
                                   open(os.path.join(SITE, p), encoding='utf-8').read()))
     dead = sorted(used - present)
-    if dead:
-        bad('③ 選取器', f'app.js 取用但頁面不存在：{dead}')
+    # ★ 頁面自己的 inline script 也要驗。這種錯最靜默：id 打錯不會拋例外，
+    #   只會讓按鈕永遠沒反應、或表單生成空內容——console 一片乾淨。
+    #   （jiucuo／tigong／wip 三頁都有 inline script。）
+    inline_dead = []
+    for p in PAGES:
+        h = open(os.path.join(SITE, p), encoding='utf-8').read()
+        for m in re.finditer(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', h, re.S):
+            js = m.group(1)
+            refs = set(re.findall(r"getElementById\('([^']+)'\)", js))
+            refs |= set(re.findall(r"val\('([^']+)'\)", js))
+            own = set(re.findall(r'id="([^"]+)"', h))
+            for r in sorted(refs - own):
+                inline_dead.append(f'{p}: #{r}')
+    if inline_dead:
+        dead = dead + inline_dead
+    app_dead = sorted(used - present)
+    if app_dead or inline_dead:
+        parts = []
+        if app_dead:
+            parts.append(f'app.js 取用但頁面不存在：{app_dead}')
+        if inline_dead:
+            parts.append(f'頁面 inline script 取用但該頁不存在：{inline_dead}')
+        bad('③ 選取器', '；'.join(parts))
     elif not used:
         bad('③ 選取器', 'app.js 未取用任何 id（檢查正則是否失效）')
     else:
-        ok('③ 選取器', f'app.js 取用 {len(used)} 個 id，全部存在於頁面')
+        ok('③ 選取器', f'app.js {len(used)} 個 id ＋ 各頁 inline script，'
+                       f'全部存在於頁面')
 
     # ---------- ④ 資料檔可解析 ----------
     try:
@@ -342,8 +365,10 @@ def main():
         ('共建頁未列文本通道', '文本' not in canyu),
         ('榮譽榜未列「文本標注」類', '文本標注' not in rongyu),
         ('honor.js 已無 text 類別', re.search(r'\btext\s*:', honor) is None),
-        ('tigong.html 已無提交表單', '<form' not in
-            open(os.path.join(SITE, 'tigong.html'), encoding='utf-8').read()),
+        # tigong.html 現在是「推薦方言」頁：收推薦與來源線索，不是文本成稿。
+        # 故檢查它明示文本由維護者統一整理，而非檢查有無表單。
+        ('tigong.html 明示文本由維護者統一整理',
+         '統一整理' in open(os.path.join(SITE, 'tigong.html'), encoding='utf-8').read()),
     ]
     bad_claims = [c for c, v in claims if not v]
     if bad_claims:

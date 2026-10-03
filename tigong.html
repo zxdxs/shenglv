@@ -3,9 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>方言文本 —— 中文聲韻</title>
-<meta name="description" content="《聲律發蒙》中文聲韻歸集：其他方言的文本層字音標注由維護者統一整理，不開放提交。想參與，歡迎以學會為單位認領吟誦錄音，或逐條糾錯。">
+<title>推薦方言 —— 中文聲韻</title>
+<meta name="description" content="推薦一支尚未收錄的方言給《聲律發蒙》中文聲韻歸集：說明它怎麼說、在哪裡說，若能一併提供字典、拼音方案、語料或有聲資料的來源，更好。純靜態表單，一鍵生成郵件，不上傳任何數據。">
 <link rel="stylesheet" href="assets/style.css">
+<style>
+  .form label { display: block; margin: .95em 0 .3em; font-weight: 600; }
+  .form .req { color: #a33; }
+  .form input, .form select, .form textarea {
+    width: 100%; box-sizing: border-box; padding: .5em .6em;
+    font-size: 1em; border: 1px solid #b8b8b8; border-radius: 4px;
+    background: #fff; font-family: inherit; color: #111;
+  }
+  .form textarea { resize: vertical; }
+  .form .chk { font-weight: 400; display: flex; gap: .5em; align-items: flex-start; }
+  .form .chk input { width: auto; margin-top: .28em; }
+  .form .row { display: flex; gap: .8em; margin-top: 1.3em; flex-wrap: wrap; }
+  .btn { background: #222; color: #fff; border: none; padding: .6em 1.3em;
+         font-size: 1em; border-radius: 4px; cursor: pointer; }
+  .btn:hover { background: #444; }
+  ol li { margin: .35em 0; }
+</style>
 </head>
 <body data-page="tigong.html">
 
@@ -13,50 +30,82 @@
 
 <main class="wrap">
 
-  <h1>方言文本</h1>
+  <h1>推薦方言</h1>
   <p class="lead">
-    其他方言的<b>文本層字音標注，由維護者統一整理</b>，不開放提交。
+    想讓某支方言也進來？<b>推薦給我們</b>——說明它怎麼說、在哪裡說。
+    <b>若能一併附上相關資源，更好</b>：字典、拼音方案、語料、有聲資料，有什麼給什麼。
   </p>
 
   <div class="card accent">
-    <p>
-      <b>為什麼統一來做：</b>字音要逐條對反切、韻書與該方言的實際讀音，
-      標音體例還得與粵語示例層一致，才能與全本並排對照。
-      分散收集的話，各家體例不同，最後仍要重做一遍——不如一開始就由一方統一做。
-    </p>
+    <p><b>為什麼要資源：</b>收一支方言不是加一個名字，而是要有可核的依據——
+      讀音從哪本字典來、方案是誰定的、有沒有母語者的聲音可對。
+      有來源，我們才敢把它擺上全本與其他方言並排。</p>
     <p class="muted" style="margin:.4rem 0 0">
-      所以這裡原本的提交表單已經撤下。這不是拒絕參與，而是把力氣留給真正需要眾人的部分。
+      不確定手上那份資料能不能用也沒關係，先推薦；授權與可用性我們一起看。
     </p>
   </div>
 
-  <h2>想參與，歡迎這兩條路</h2>
-  <div class="grid">
-    <a class="card card-link" href="contribute.html">
-      <div class="t">提供吟誦錄音</div>
-      <div class="d">以吟誦學會為單位認領篇目，手機錄音即可；著作權歸吟誦者，可隨時要求下架</div>
-    </a>
-    <a class="card card-link" href="jiucuo.html">
-      <div class="t">糾錯</div>
-      <div class="d">底本文字、反切、粵拼、入聲標記、多音字選音、分工表數據，都在可糾範圍</div>
-    </a>
-  </div>
+  <form class="card form" id="tgForm" onsubmit="return false;">
+    <label>方言名稱 <span class="req">*</span>
+      <input id="f-dialect" required placeholder="如：溫州話、梅縣客家話、雷州話">
+    </label>
+    <label>所屬大區／片（如知道的話）
+      <input id="f-pian" placeholder="如：吳語 · 甌江片、客家話 · 粵台片">
+    </label>
+    <label>主要使用地
+      <input id="f-place" placeholder="如：浙江溫州、廣東梅州">
+    </label>
+    <label>相關資源（字典、拼音方案、語料庫、有聲資料、論文或網站，一行一項）
+      <textarea id="f-res" rows="5" placeholder="例：&#10;《溫州方言詞典》商務印書館&#10;https://example.org/wenzhou-rime（開源方案）&#10;某 YouTube 頻道（母語者朗讀）"></textarea>
+    </label>
+    <label>這些資源的授權狀態（知道就填；不確定留空）
+      <input id="f-license" placeholder="如：CC0／CC-BY-4.0／GPL-3.0／不確定">
+    </label>
+    <label>推薦人署名 <span class="req">*</span>
+      <input id="f-name" required placeholder="可具名或匿名">
+    </label>
+    <label>聯繫方式 <span class="req">*</span>
+      <input id="f-contact" required placeholder="郵箱／微信／其他">
+    </label>
+    <label class="chk"><input type="checkbox" id="f-ok" required>
+      我了解：本站的文本層由維護者統一整理，推薦不等於提交成稿；
+      若資源涉及第三方授權，需經確認後才會納入。</label>
+    <div class="row">
+      <button type="button" class="btn" id="b-mail">生成郵件</button>
+      <button type="button" class="btn" id="b-copy">複製內容</button>
+      <span class="muted" id="f-tip"></span>
+    </div>
+    <p class="muted" style="margin-top:1em;">
+      本站是純靜態站：沒有帳號、沒有後端、沒有數據庫。您填的內容只存在您的瀏覽器裡——
+      「生成郵件」會打開您的郵件客戶端，「複製內容」則複製到剪貼板由您自行發送。
+      <b>不會上傳到任何伺服器。</b>
+    </p>
+  </form>
 
-  <h2>關於方言文本</h2>
-  <div class="card">
-    <ul>
-      <li><b>現況：</b>全本頁可切換的方言點讀音，來源與授權逐項列在
-        〈<a href="about.html#license">關於本站</a>〉，原始檔可自
-        〈<a href="sources.html">上游來源檔</a>〉下載。</li>
-      <li><b>體例：</b>逐字對齊、入聲標示、韻腳標紅、多音字依反切定音——
-        與粵語示例層同一套規則，見〈<a href="about.html#license">關於本站</a>〉第五節「方法」。</li>
-      <li><b>發現文本有誤：</b>請走〈<a href="jiucuo.html">糾錯</a>〉，我們逐條核對。</li>
-    </ul>
-  </div>
+  <h2>推薦之後會怎樣</h2>
+  <ol>
+    <li>維護者收到後，先看<b>有沒有可核的來源</b>——有字典、方案或母語者音檔，才談收錄。</li>
+    <li>確認<b>授權</b>：來源需有明確授權才納入。高覆蓋但未標明授權的資料，我們不收
+      （客家話就是因此暫緩的）。</li>
+    <li><b>文本層由維護者統一整理</b>：逐字對反切、韻書與該方言實際讀音，標音體例與粵語示例層一致。</li>
+    <li>要真正落地，還需要有人<b>認領吟誦錄音</b>——見〈<a href="contribute.html">提供錄音</a>〉；
+      進度公開在〈<a href="fengong.html">歸集進度</a>〉。</li>
+  </ol>
 
+  <h2>目前還沒收錄的方言</h2>
   <p class="muted">
-    各支方言的吟誦認領狀態見〈<a href="fengong.html">歸集進度</a>〉；
-    共建的其他方式見〈<a href="canyu.html">共建與貢獻墻</a>〉。
+    尚在等待第一支學會認領的方言，列在〈<a href="wip.html">方言 · 建設中</a>〉。
+    你推薦的方言若不在其中，我們會一併評估。
   </p>
+
+  <h2>為什麼文本不開放提交</h2>
+  <div class="card">
+    <p class="muted" style="margin:0">
+      字音要逐條對反切、韻書與該方言的實際讀音，標音體例還得與粵語示例層一致，才能與全本並排對照。
+      分散收集的話，各家體例不同，最後仍要重做一遍——不如一開始就由一方統一做。
+      所以這裡收的是<b>推薦與來源線索</b>，不是成稿。
+    </p>
+  </div>
 
 </main>
 
@@ -66,5 +115,63 @@
 <script src="assets/chars.js"></script>
 <script src="assets/registry.js"></script>
 <script src="assets/app.js"></script>
+<script>
+(function () {
+  function val(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+  function build() {
+    var L = [];
+    L.push('【推薦方言】《聲律發蒙》中文聲韻歸集');
+    L.push('方言名稱：' + (val('f-dialect') || '（未填）'));
+    L.push('所屬大區／片：' + (val('f-pian') || '（未填）'));
+    L.push('主要使用地：' + (val('f-place') || '（未填）'));
+    L.push('推薦人：' + (val('f-name') || '（未填）'));
+    L.push('聯繫方式：' + (val('f-contact') || '（未填）'));
+    L.push('');
+    L.push('相關資源（一行一項）：');
+    L.push(val('f-res') || '（未填）');
+    L.push('');
+    L.push('資源授權狀態：' + (val('f-license') || '（不確定）'));
+    L.push('');
+    L.push('（由 tigong.html「推薦方言」表單生成）');
+    return L.join('\n');
+  }
+  function check() {
+    if (!val('f-dialect')) { alert('請填方言名稱'); return false; }
+    if (!val('f-name')) { alert('請填推薦人署名'); return false; }
+    if (!val('f-contact')) { alert('請填聯繫方式'); return false; }
+    var ok = document.getElementById('f-ok');
+    if (!ok || !ok.checked) { alert('請勾選了解聲明'); return false; }
+    return true;
+  }
+  var m = document.getElementById('b-mail');
+  if (m) m.addEventListener('click', function () {
+    if (!check()) return;
+    var subj = '【推薦方言】' + (val('f-dialect') || '') +
+      (val('f-place') ? ' · ' + val('f-place') : '');
+    window.location.href = 'mailto:hello@solve-lab.cn?subject=' +
+      encodeURIComponent(subj) + '&body=' + encodeURIComponent(build());
+  });
+  var c = document.getElementById('b-copy');
+  if (c) c.addEventListener('click', function () {
+    if (!check()) return;
+    var body = build();
+    function done() {
+      var t = document.getElementById('f-tip');
+      if (t) t.textContent = '已複製。請貼到郵件，寄給 hello@solve-lab.cn。';
+    }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = body; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); }
+      catch (e) { alert('複製失敗，請手動選取。'); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(body).then(done, fallback);
+    } else { fallback(); }
+  });
+})();
+</script>
 </body>
 </html>

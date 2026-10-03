@@ -411,9 +411,10 @@
       { label: '吳語', href: 'quanben.html?pt=shanghai', on: true },
       { label: '閩南語', href: 'quanben.html?pt=chaozhou', on: true },
       { label: '客家話', href: 'wip.html' },
-      // 「＋ 添加」改指提供錄音：文本層已由維護者統一整理，
-      // 現在要讓一支方言落地，走的是錄音而非提交文本。
-      { label: '＋ 添加方言', href: 'contribute.html', add: true }
+      // ＋ 添加方言 → tigong.html「推薦方言」：讓人推薦尚未收錄的方言，
+      // 並附上字典／方案／語料等來源線索。先前誤指 contribute.html——
+      // 那頁是「錄音怎麼錄」的教學，不是推薦方言的地方。
+      { label: '＋ 推薦方言', href: 'tigong.html', add: true }
     ]}
   ];
 

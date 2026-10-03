@@ -29,6 +29,7 @@ PAGES = [
     ("/quanben.html", "全本／方言切換"),
     ("/shengyun.html", "聲韻入門"),
     ("/sources.html", "上游來源檔"),
+    ("/tigong.html", "推薦方言"),
     ("/duizhang.html", "反切對帳"),
     ("/jyutping.html", "粵拼入門"),
     ("/contribute.html", "提供錄音"),
@@ -47,6 +48,7 @@ EXPECT = {
     "/quanben.html": [("#volTabs", 3), ("#rhymeNav", 3), ("#rhymeBody", 1500), ("#ptBar", 3)],
     "/shengyun.html": [("#cmn-dist", 3), ("#yue-cmp", 20), ("#min-ru", 20)],
     "/sources.html": [],         # 表格是靜態 HTML
+    "/tigong.html": [],         # 表單是靜態 HTML
     "/duizhang.html": [("#dzStats", 3), ("#dzBody", 3000)],
     "/about.html": [("#variants", 3), ("#aboutStats", 3)],
     "/contribute.html": [],
