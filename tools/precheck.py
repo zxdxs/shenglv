@@ -371,15 +371,19 @@ def main():
         # 實際踩過：tigong.html 改版時把「也可以直接寄到 hello@solve-lab.cn，
         # 或微信聯絡維護者（課孫翁）」整段弄丟，頁面上只剩表單——
         # 不想填表的人就沒有路可走。這種掉失不會有任何錯誤訊息。
+        # 徵集貢獻的頁面都必須讓人有路可走：有表單的，以及共建入口頁。
         # ★ 只看「可見內容」——先剔除 <script> 區塊。
         #   這些頁面的 inline script 裡本來就有 mailto:hello@solve-lab.cn
         #   與提示文字；直接 grep 整檔會被程式碼滿足，閘門形同虛設
         #   （實測把頁面上的聯絡方式整段刪掉，仍照樣通過）。
-        ('有表單的頁面都提供維護者聯絡方式',
-         all('hello@solve-lab.cn' in re.sub(r'<script\b.*?</script>', '', html, flags=re.S)
-             for html in (open(os.path.join(SITE, f), encoding='utf-8').read()
-                          for f in PAGES)
-             if '<form' in html)),
+        ('徵集貢獻的頁面都提供維護者聯絡方式',
+         all('hello@solve-lab.cn' in _vis
+             for _pg, _vis in ((f,
+                                re.sub(r'<script\b.*?</script>', '',
+                                       open(os.path.join(SITE, f), encoding='utf-8').read(),
+                                       flags=re.S))
+                               for f in PAGES)
+             if '<form' in _vis or _pg == 'canyu.html')),
         ('tigong.html 明示文本由維護者統一整理',
          '統一整理' in open(os.path.join(SITE, 'tigong.html'), encoding='utf-8').read()),
     ]
