@@ -15,7 +15,7 @@ const vm = require('vm');
 // 同時支援兩種放置方式：舊佈局（上一層有 site/）與倉庫佈局（上一層就是站點）
 const _siteSub = path.join(__dirname, '..', 'site');
 const SITE = fs.existsSync(_siteSub) ? _siteSub : path.join(__dirname, '..');
-const PAGES = ['index.html', 'weihe.html', 'fengong.html', 'canyu.html', 'wip.html', 'quanben.html', 'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', 'shengyun.html', '404.html'];
+const PAGES = ['index.html', 'weihe.html', 'fengong.html', 'canyu.html', 'wip.html', 'quanben.html', 'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', 'shengyun.html', 'data/index.html', '404.html'];
 
 /* ------------------------------------------------------------ 最小 DOM 墊片 */
 function makeNode(tag) {
@@ -124,6 +124,10 @@ const EXPECT = {
                     ['#sc-zh', 36], ['#sc-tone', 24], ['#sc-ru', 36],
                     ['#wu-voiced', 30], ['#wu-ru', 28], ['#wu-diff', 14],
                     ['#min-ru', 54], ['#min-nasal', 42], ['#min-diff', 38]],
+  // 上游來源清單頁（data/index.html）：表格是靜態 HTML，本測試的 DOM 墊片
+  // 只為每個 id 建空節點、不解析子節點，故驗不了靜態內容——那 26 個檔案連結
+  // 由 precheck ⑤ 驗（它會逐條確認目標檔存在）。這裡只驗共通的 nav/footer。
+  'data/index.html': [],
   '404.html': []
 };
 
@@ -141,8 +145,14 @@ const problems = [];
     vm.createContext(sandbox);
 
     // 模擬 <script src>：由磁碟載入並在沙箱中執行
+    // ★ 以**頁面所在目錄**為基準解析。子目錄頁（data/index.html）用的是
+    //   ../assets/app.js；先前一律當成站點根目錄的相對路徑，該頁會找不到檔案。
+    const pageDir = path.dirname(page);
+    function resolveSrc(src) {
+      return path.join(SITE, pageDir, src.replace(/^\.?\//, ''));
+    }
     function loadScript(src, node) {
-      const p = path.join(SITE, src.replace(/^\.?\//, ''));
+      const p = resolveSrc(src);
       try {
         vm.runInContext(fs.readFileSync(p, 'utf8'), sandbox, { filename: src });
         if (node && node.onload) node.onload();
@@ -163,12 +173,10 @@ const problems = [];
       //   shengyun.html 這種多引用一支資料檔的頁面，測試少載了一支卻照樣「通過」，
       //   掩蓋了真實瀏覽器會遇到的問題。測試載入的檔案必須等於瀏覽器載入的檔案。
       const srcs = [...html.matchAll(/<script\s+src="([^"]+)"/g)].map(m => m[1]);
-      const missing = srcs.filter(s => !fs.existsSync(path.join(SITE, s.replace(/^\.?\//, ''))));
+      const missing = srcs.filter(s => !fs.existsSync(resolveSrc(s)));
       if (missing.length) throw new Error('頁面引用了不存在的檔案：' + missing.join('、'));
       for (const f of srcs) {
-        vm.runInContext(
-          fs.readFileSync(path.join(SITE, f.replace(/^\.?\//, '')), 'utf8'),
-          sandbox, { filename: f });
+        vm.runInContext(fs.readFileSync(resolveSrc(f), 'utf8'), sandbox, { filename: f });
       }
       fire();
       await new Promise(r => setTimeout(r, 120));   // 等動態 script 載入
@@ -224,8 +232,14 @@ const problems = [];
     sandbox.window.document = null;
     vm.createContext(sandbox);
 
+    // ★ 以**頁面所在目錄**為基準解析。子目錄頁（data/index.html）用的是
+    //   ../assets/app.js；先前一律當成站點根目錄的相對路徑，該頁會找不到檔案。
+    const pageDir = path.dirname(page);
+    function resolveSrc(src) {
+      return path.join(SITE, pageDir, src.replace(/^\.?\//, ''));
+    }
     function loadScript(src, node) {
-      const p = path.join(SITE, src.replace(/^\.?\//, ''));
+      const p = resolveSrc(src);
       try {
         vm.runInContext(fs.readFileSync(p, 'utf8'), sandbox, { filename: src });
         if (node && node.onload) node.onload();

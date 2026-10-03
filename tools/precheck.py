@@ -21,6 +21,7 @@ precheck.py —— 聲律發蒙·中文聲韻站 上站前自檢（全本 106 �
 """
 
 import json, os, re, sys
+import urllib.parse
 import xml.etree.ElementTree as ET
 from collections import Counter
 
@@ -160,31 +161,62 @@ def main():
         return re.sub(r'<!--.*?-->', '', h, flags=re.S)
 
     links, dead_links = 0, []
+    # ★ 掃描範圍為**所有** .html（含 data/index.html 這類子目錄頁），
+    #   不限於 PAGES——否則子目錄頁自己的連結沒人管。
+    all_html = []
+    for root, dirs, fns in os.walk(SITE):
+        dirs[:] = [d for d in dirs if d not in ('.git', 'audio')]   # audio 只有 mp3
+        for fn in sorted(fns):
+            if fn.endswith('.html'):
+                all_html.append(os.path.relpath(os.path.join(root, fn), SITE)
+                                .replace(os.sep, '/'))
     page_ids = {}
-    for p in PAGES:
-        page_ids[p] = set(re.findall(
-            r'id="([^"]+)"',
-            strip_comments(open(os.path.join(SITE, p), encoding='utf-8').read())))
-    for p in PAGES:
+    page_body = {}
+    for p in all_html:
+        body = strip_comments(open(os.path.join(SITE, p), encoding='utf-8').read())
+        page_body[p] = body
+        page_ids[p] = set(re.findall(r'id="([^"]+)"', body))
+
+    def resolve(page, rel):
+        """把頁面內的相對網址解析成站點內的相對路徑（供存在性與錨點判斷）。"""
+        base = os.path.dirname(page)
+        return os.path.normpath(os.path.join(base, rel)) if base else rel
+
+    for p in all_html:
         # ★ 404.html 用絕對路徑是**正確的**：它可能在任意深度被服務，
         #   相對路徑在那裡反而會斷。故不把它的 /xxx 當死鏈。
         if p == '404.html':
             continue
-        html = strip_comments(open(os.path.join(SITE, p), encoding='utf-8').read())
-        for m in re.finditer(r'href="([^"]+)"', html):
+        for m in re.finditer(r'href="([^"]+)"', page_body[p]):
             u = m.group(1)
             if u.startswith(('http', 'mailto:', '#')):
                 continue
             links += 1
             fn, _, frag = u.partition('#')
-            if fn and not os.path.exists(os.path.join(SITE, fn.lstrip('/'))):
+            # ★ 先 URL 解碼。檔名含中文時（小韻表.csv）產生器會寫成
+            #   %E5%B0%8F%E9%9F%BB%E8%A1%A8.csv；不解碼就會把**存在**的檔案
+            #   誤報為死鏈。
+            fn = urllib.parse.unquote(fn)
+            frag = urllib.parse.unquote(frag)
+            tgt = resolve(p, fn.lstrip('/')) if fn else p
+            tgt = tgt.replace(os.sep, '/')
+            if fn and not os.path.exists(os.path.join(SITE, tgt)):
                 dead_links.append(f'{p} → {u}（檔案不存在）')
                 continue
-            # ★ 錨點也要驗。先前只驗檔存在，於是 fengong.html#fy 這種
-            #   「檔案在、錨點不在」的死鏈四頁齊發卻一路綠燈。
-            tgt = fn.lstrip('/') or p
-            if frag and tgt in page_ids and frag not in page_ids[tgt]:
-                dead_links.append(f'{p} → {u}（錨點 {frag} 不存在於 {tgt}）')
+            # ★ 目錄網址：Caddy **不做目錄列表**，所以 /some/dir/ 在線上一定是 404，
+            #   除非該目錄裡有 index.html（根目錄 / 就是靠 index.html 運作的）。
+            #   先前只驗 os.path.exists，而**目錄也存在**，於是
+            #   about.html 連到 data/upstream/ 這種死鏈一路綠燈——同步上線後才會爆。
+            if fn and os.path.isdir(os.path.join(SITE, tgt)) and \
+                    not os.path.exists(os.path.join(SITE, tgt, 'index.html')):
+                dead_links.append(f'{p} → {u}（目錄且無 index.html，線上會 404）')
+                continue
+            if frag:
+                anchor_page = (tgt.rstrip('/') + '/index.html') if \
+                    os.path.isdir(os.path.join(SITE, tgt)) else tgt
+                if anchor_page in page_ids and frag not in page_ids[anchor_page]:
+                    dead_links.append(
+                        f'{p} → {u}（錨點 {frag} 不存在於 {anchor_page}）')
 
     # sitemap：不只要「loc 可達」，還要結構正確、且涵蓋每一頁。
     # ★ 舊檢查只用正則抽 <loc> 再驗檔存在，因而漏掉兩種真缺陷：
@@ -215,7 +247,13 @@ def main():
             if not t.startswith('https://shenglv.org.cn/'):
                 sm_bad.append(f'sitemap loc 不是本站網址：{t!r}')
                 continue
-            sm_files.append(t.rsplit('/', 1)[-1])
+            # ★ 取「網域之後的完整路徑」，不是 basename。
+            #   先前用 rsplit('/',1)[-1]，於是日後若列入 /data/index.html，
+            #   會被當成根目錄的 index.html 而誤判為存在（假通過）。
+            rel = t[len('https://shenglv.org.cn/'):]
+            if not rel or rel.endswith('/'):
+                rel = rel + 'index.html'      # 目錄網址即其 index.html
+            sm_files.append(rel)
     want = [p for p in PAGES if p != '404.html']
     missing = [p for p in want if p not in sm_files]
     if missing:

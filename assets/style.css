@@ -365,3 +365,12 @@ tr.blank td.seq { color: var(--pin); }
           text-decoration: none; }
 .ptlink:hover { border-color: var(--ink-soft); color: var(--ink); }
 .ptlink.on { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+
+/* ---------- 上游來源檔清單（data/index.html） ---------- */
+.srcwrap { overflow-x: auto; margin: .4rem 0 1.4rem; }
+table.src { width: 100%; border-collapse: collapse; font-size: .84rem; }
+table.src td { border-bottom: 1px dotted var(--line); padding: .22rem .3rem; }
+table.src td.sz { text-align: right; white-space: nowrap; color: var(--pin);
+                  font-size: .78rem; font-family: "Menlo", "Consolas", monospace; }
+table.src a { color: var(--jyut); text-decoration: none; }
+table.src a:hover { text-decoration: underline; }
