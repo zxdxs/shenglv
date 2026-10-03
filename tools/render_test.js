@@ -15,7 +15,7 @@ const vm = require('vm');
 // 同時支援兩種放置方式：舊佈局（上一層有 site/）與倉庫佈局（上一層就是站點）
 const _siteSub = path.join(__dirname, '..', 'site');
 const SITE = fs.existsSync(_siteSub) ? _siteSub : path.join(__dirname, '..');
-const PAGES = ['index.html', 'weihe.html', 'fengong.html', 'canyu.html', 'wip.html', 'quanben.html', 'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', 'shengyun.html', 'data/index.html', '404.html'];
+const PAGES = ['index.html', 'weihe.html', 'fengong.html', 'canyu.html', 'wip.html', 'quanben.html', 'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', 'shengyun.html', 'sources.html', '404.html'];
 
 /* ------------------------------------------------------------ 最小 DOM 墊片 */
 function makeNode(tag) {
@@ -124,10 +124,10 @@ const EXPECT = {
                     ['#sc-zh', 36], ['#sc-tone', 24], ['#sc-ru', 36],
                     ['#wu-voiced', 30], ['#wu-ru', 28], ['#wu-diff', 14],
                     ['#min-ru', 54], ['#min-nasal', 42], ['#min-diff', 38]],
-  // 上游來源清單頁（data/index.html）：表格是靜態 HTML，本測試的 DOM 墊片
+  // 上游來源清單頁（sources.html）：表格是靜態 HTML，本測試的 DOM 墊片
   // 只為每個 id 建空節點、不解析子節點，故驗不了靜態內容——那 26 個檔案連結
   // 由 precheck ⑤ 驗（它會逐條確認目標檔存在）。這裡只驗共通的 nav/footer。
-  'data/index.html': [],
+  'sources.html': [],
   '404.html': []
 };
 

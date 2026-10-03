@@ -34,7 +34,7 @@ _site_sub = os.path.join(HERE, 'site')
 SITE = _site_sub if os.path.isdir(_site_sub) else os.path.dirname(HERE)
 ASSETS = os.path.join(SITE, 'assets')
 PAGES = ['index.html', 'weihe.html', 'fengong.html', 'canyu.html', 'wip.html', 'quanben.html',
-         'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', 'shengyun.html', '404.html']
+         'duizhang.html', 'jyutping.html', 'contribute.html', 'jiucuo.html', 'rongyu.html', 'about.html', 'shengyun.html', 'sources.html', '404.html']
 
 fails, warns, checks = [], [], []
 
@@ -101,15 +101,18 @@ def main():
         if not os.path.exists(page_path):
             continue
         html = open(page_path, encoding='utf-8').read()
+        page_dir = os.path.dirname(page)
         for m in re.finditer(r'(?:href|src)="([^"]+)"', html):
             u = m.group(1)
             if u.startswith(('http', 'mailto:', '#', 'data:')):
                 continue
-            u2 = u.split('#')[0].split('?')[0]
+            # ★ 先 URL 解碼再比對檔案。上游檔名含中文（小韻表.csv），
+            #   sources.html 會寫成百分號編碼；不解碼就把它們誤報為不存在。
+            u2 = urllib.parse.unquote(u.split('#')[0].split('?')[0])
             if not u2:
                 continue
             refs += 1
-            fp = os.path.join(SITE, u2.lstrip('/'))
+            fp = os.path.normpath(os.path.join(SITE, page_dir, u2.lstrip('/')))
             if not os.path.exists(fp):
                 missing.append(f'{page} → {u}（不存在）')
             elif u.endswith('.mp3') and os.path.getsize(fp) < 800:
