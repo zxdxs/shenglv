@@ -4,3 +4,8 @@
 # Python
 __pycache__/
 *.py[cod]
+
+# 方言產線（sichuan-pilot）目前巢狀在本站點倉庫內，但它自己有獨立的 git 倉庫。
+# 不排除的話，一次 `git add -A` 就會把它整個併進站點倉庫（327 檔 12MB），
+# 兩邊的歷史從此糾纏。故明確排除。
+sichuan-pilot/
