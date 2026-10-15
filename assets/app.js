@@ -100,9 +100,18 @@
      （首行就寫「自動產生，勿手改」），手改會被下次建置覆蓋；app.js 才是手寫維護層。
 
      工信部要求備案號必須顯示在網站底部，並連結 https://beian.miit.gov.cn/ ——
-     這是法律責任，不是裝飾。 */
+     這是法律責任，不是裝飾。
+
+     ★ 公安聯網備案號：工信部備案後，依《計算機信息網絡國際聯網安全保護管理辦法》，
+     須於網站開通 30 日內完成公安聯網備案，並將**備案號與備案圖標**一併置於網頁底部。
+     本站為 川公网安备51018102000884号；查詢連結格式為
+     https://beian.mps.gov.cn/#/query/webSearch?code=<號碼的數字部分>。
+     圖標 assets/ghs.png 取自公安部備案系統（www.beian.gov.cn/img/ghs.png）。
+     GONGAN 留空時整段不輸出。 */
   var BEIAN = '蜀ICP备2026055920号-2';
   var BEIAN_URL = 'https://beian.miit.gov.cn/';
+  var GONGAN = '川公网安备51018102000884号';
+  var GONGAN_CODE = '51018102000884';
 
   /* ------------------------------------------------------------- 小工具 */
   function el(tag, cls, text) {
@@ -518,15 +527,33 @@
                  { text: '同為「以訓練取代閱讀」的嘗試', cls: 'muted' }]);
     c.appendChild(cols);
     /* ICP 備案號：BEIAN 留空時整段不輸出（見檔頭「備案資訊」說明） */
-    if (BEIAN) {
+    if (BEIAN || GONGAN) {
       var b = el('div', 'muted');
       b.style.marginTop = '12px';
-      b.appendChild(document.createTextNode('ICP 備案：'));
-      var ba = el('a', null, BEIAN);
-      ba.href = BEIAN_URL;
-      ba.target = '_blank';
-      ba.rel = 'noopener';
-      b.appendChild(ba);
+      if (BEIAN) {
+        b.appendChild(document.createTextNode('ICP 備案：'));
+        var ba = el('a', null, BEIAN);
+        ba.href = BEIAN_URL;
+        ba.target = '_blank';
+        ba.rel = 'noopener';
+        b.appendChild(ba);
+      }
+      if (GONGAN) {
+        if (BEIAN) b.appendChild(document.createTextNode('　|　'));
+        var ga = el('a', 'gongan');
+        ga.href = 'https://beian.mps.gov.cn/#/query/webSearch?code=' + GONGAN_CODE;
+        ga.target = '_blank';
+        ga.rel = 'noopener';
+        var gi = el('img');
+        gi.src = 'assets/ghs.png';
+        gi.alt = '公安備案圖標';
+        gi.width = 20; gi.height = 20;
+        gi.style.verticalAlign = 'text-bottom';
+        gi.style.marginRight = '3px';
+        ga.appendChild(gi);
+        ga.appendChild(document.createTextNode(GONGAN));
+        b.appendChild(ga);
+      }
       c.appendChild(b);
     }
     host.appendChild(c);

@@ -36,12 +36,17 @@ expect_code() {  # <路徑> <期望碼> <說明>
 }
 
 expect_has() {   # <路徑> <關鍵字> <說明>
+  # ★ 不要寫成 printf … | grep -q：grep -q 一命中就結束並關閉管線，
+  #   仍在寫入的 printf 會收到 SIGPIPE（exit 141）；set -o pipefail 讓整條
+  #   管線判為失敗，於是**明明找到卻報找不到**。
+  #   小檔（管線緩衝區裝得下）不會觸發，大檔（assets/app.js 68KB）必中——
+  #   實測時 22 項全過、只有 app.js 那幾項誤報，就是這個原因。
+  #   改用 bash 內建的字面比對：無子程序、無管線，也順便讓 . 與 ? 不再是正則字符。
   local b; b=$(body "${BASE}${1}")
-  if printf '%s' "${b}" | grep -q -- "${2}"; then
-    ok "${3}"
-  else
-    no "${3} —— ${1} 找不到「${2}」"
-  fi
+  case "${b}" in
+    *"${2}"*) ok "${3}" ;;
+    *)        no "${3} —— ${1} 找不到「${2}」" ;;
+  esac
 }
 
 echo "驗收目標：${BASE}"
@@ -72,6 +77,13 @@ echo "── 三、GPL-3.0 對應來源可自助取得"
 expect_code /data/LICENSE-GPL-3.0.txt 200 "授權全文"
 expect_code /data/upstream/shupin.dict.yaml 200 "蜀拼字典（GPL-3.0 上游）"
 expect_code /data/upstream-min/chaozhou.dict.yaml 200 "潮汕方案（GPL-3.0 上游）"
+
+echo
+echo "── 三之二、備案號（法定必須顯示）"
+expect_has  /assets/app.js "蜀ICP备2026055920号-2" "ICP 備案號（工信部）"
+expect_has  /assets/app.js "川公网安备51018102000884号" "公安聯網備案號"
+expect_code /assets/ghs.png 200 "公安備案圖標"
+expect_has  /assets/app.js "beian.mps.gov.cn/#/query/webSearch?code=" "公安備案查詢連結"
 
 echo
 echo "── 四、/fangyan/ 已廢除"
