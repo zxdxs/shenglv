@@ -19,7 +19,13 @@ BASE="${BASE:-https://shenglv.org.cn}"
 PASS=0; FAIL=0
 
 # 取狀態碼（網路錯誤時回 000，不中止）
-code() { curl -s -o /dev/null -w '%{http_code}' -m 20 "${1}" 2>/dev/null || echo 000; }
+# ★ 不要寫成 `curl … || echo 000`：curl 失敗時 -w 已經印了 000，`||` 再接一個 000
+#   ⇒ 變成「000000」，訊息會出現「線上回 000000」這種鬼東西（同專案 psc 站實測踩到）。
+code() {
+  local c
+  c=$(curl -s -o /dev/null -w '%{http_code}' -m 20 "${1}" 2>/dev/null) || true
+  case "${c}" in ''|000) printf '000' ;; *) printf '%s' "${c}" ;; esac
+}
 # 取內容（失敗回空字串）
 body() { curl -s -m 20 "${1}" 2>/dev/null || true; }
 
